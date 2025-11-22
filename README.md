@@ -1,80 +1,31 @@
-# Repogenesis - Healthcare Track
+🏥 VITALS: Sachidanand Health Care - The "Zero-Friction" Smart Hospital Ecosystem Team Name: VITALS Track: Repogenesis - Healthcare Technology Status: Submitted for Review
 
-Welcome to the **Healthcare Track** of Repogenesis!  
-This repository sets the foundation for teams building applications in health, wellness, diagnostics, medical data, and healthcare technology.
+💡 Project Overview & Solution The modern healthcare experience is marred by fragmentation, financial opacity, and disconnect between care points. Sachidanand Health Care is an integrated digital ecosystem engineered to dismantle these barriers, creating a seamless, transparent flow across the entire patient journey—from admission to post-care recovery.
 
-Participants will **fork this repository**, create a folder with their **team name**, and build their project inside it.
+Our solution is built upon three critical pillars: Smart Administration, Transparent Monitoring, and Digital Therapeutics, transforming the hospital experience from a source of anxiety into a genuine partner in healing.
 
-## What Is Healthcare Tech?
+✨ Key Features & Innovation This platform is a fully integrated full-stack solution with the following core innovations:
 
-You can build solutions such as:
+Pillar 1: Smart Administration & Financial Transparency Visual Bed Allocation Grid: A standout innovation using a cinema-style booking interface for real-time viewing and selection of specific available beds (General, Private, ICU) within hospital wards.
 
-- Patient vitals monitoring
-- Health dashboards
-- Appointment/clinic systems
-- Fitness & wellness apps
-- Symptom analysis tools
-- Mental health assistants
-- Medical record management
-- Predictive analytics
-- AI-based diagnostics (on dummy data)
-- Telemedicine utilities
-- Emergency assistance systems
+Advanced Bill Calculator: A crucial financial safeguard that dynamically estimates total costs based on surgery type, room selection, and applied insurance/discounts, ensuring complete financial clarity before admission.
 
-Healthcare is vast - explore subdomains freely.
+Pillar 2: 'Aarogyam' Diagnostics & Clinical Clarity Aarogyam Diagnostic Hub: Comprehensive module for booking lab tests and scans, paired with a deep Disease Encyclopedia featuring dedicated care cards (Cardiac, Lung, Cancer) and prevention protocols.
 
-## Repository Structure
+Live Patient Health Board: A real-time medical journal for inpatients, auto-updating every 6 hours with vitals, history, and new reports, granting families peace of mind.
 
-```
-healthcare/
-│
-├── starter/
-│ ├── health-monitor-demo/ # Example app (optional)
-│ └── dummy-data/ # Fictional patient & vitals datasets
-│
-├── docs/
-│ ├── problem-prompts.md
-│ ├── healthcare-architecture.md
-│ ├── datasets.md
-│ ├── fhir-basics.md
-│ └── ethics-and-privacy.md
-│
-└── README.md
-```
+Remote Consultation: Integration of Jitsi-powered video consultations to bridge the doctor-patient gap for remote and follow-up care.
 
-## How to Participate
+Pillar 3: Digital Therapeutics & Post-Care Logistics Gamified Rehab Modules: Interactive web-based games designed for therapeutic benefit, including modules for stroke recovery and panic attack management, turning therapy into an engaging daily habit.
 
-1. **Fork** this repository.
-2. **Clone** your fork.
-3. Create a new folder with your **team name**: `/Your-Team-Name/`
+QR-Code Prescription Backups: Addresses the issue of lost paperwork by providing digital, QR-coded backups of prescriptions.
 
-4. Build your entire project inside this folder.
-5. Push to your fork.
-6. Submit the link as instructed.
+Full-Stack E-Pharmacy with Granular Logistics: Closes the loop on care by allowing patients to track medicine delivery step-by-step—from "Order Placed" to "Delivered"—ensuring medication compliance.
 
-## Ethics & Privacy Guidelines
+⚙️ Technology Stack This project is a Full-stack Web Application utilizing the following core technologies:
 
-Healthcare is a sensitive domain. Please follow:
+Frontend: HTML, CSS, JavaScript
 
-- Do **not** use real patient data. **Only fictional or anonymized datasets**.
-- Respect medical ethics.
-- Be cautious when using ML for predictions.
-- Do not claim clinical accuracy - this is a student innovation event.
-- Ensure your app does not give harmful medical recommendations.
+Backend & Database: MongoDB, Server Management (Node.js/Express assumed)
 
-## Resources Included
-
-In the `docs/` and `starter/` folders, you will find:
-
-- Dummy health datasets
-- FHIR (Healthcare data standard) examples
-- Basic dashboard starter
-- Example vitals JSON
-- Recommended tools & libraries
-- Architecture examples
-
-## Goal
-
-Your project should aim to **improve health, wellness, or medical workflow** using responsible engineering practices.
-
-Happy Hacking!
+Video Conferencing: Jitsi Integration
