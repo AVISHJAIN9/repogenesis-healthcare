@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecureHealth Insurance - Live Tracker</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. BRAND THEME VARIABLES (Sachidanand Sync) --- */
+        :root {
+            --brand-teal: #0f4c5c;         /* Deep Teal */
+            --brand-dark: #09303a;         /* Darkest Teal */
+            --brand-gold: #c5a059;         /* Sacred Gold */
+
+            --primary-blue: var(--brand-dark); 
+            --accent-blue: var(--brand-teal); 
+            --success-green: #2d6a4f;      /* Muted Success Green */
+            
+            --bg-color: #fdfbf7;           /* Cream Background */
+            --card-bg: #ffffff;
+            --text-main: var(--brand-dark);
+            --text-light: #666666;
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 15px 30px rgba(15, 76, 92, 0.15);
+            --border-color-light: rgba(15, 76, 92, 0.1);
+        }
+
+        /* --- 2. GLOBAL LAYOUT --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Sticky Glass Header */
+        header {
+            background: var(--primary-blue); /* Dark Teal */
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        h1 { 
+            margin: 0; 
+            font-size: 1.6rem; 
+            letter-spacing: -0.5px; 
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        nav a {
+            color: #f1f1f1;
+            margin-left: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        nav a:hover { color: var(--brand-gold); }
+
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* Section Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color-light);
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--primary-blue);
+            margin-top: 0;
+            font-size: 1.6rem;
+            border-bottom: 2px solid rgba(15, 76, 92, 0.1);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        p { color: var(--text-muted); margin-bottom: 0; }
+
+        /* --- 3. TRACKER UI --- */
+        
+        /* The Demo Warning Box */
+        .demo-badge {
+            background-color: var(--color-light);
+            border: 1px solid rgba(197, 160, 89, 0.5);
+            color: var(--brand-gold);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .tracker-wrapper {
+            position: relative;
+            margin: 3rem 1rem; 
+        }
+
+        /* Gray Background Line */
+        .progress-track {
+            background-color: #e2e8f0;
+            height: 10px;
+            width: 100%;
+            border-radius: 99px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Green Animated Fill */
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent-blue), var(--success-green)); /* Teal to Success Green */
+            height: 100%;
+            width: 0%; /* JS updates this */
+            border-radius: 99px;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(45, 106, 79, 0.4);
+        }
+
+        /* Marker Logic */
+        .marker-container {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+            width: 80px;
+        }
+
+        /* The Dot */
+        .dot {
+            width: 18px;
+            height: 18px;
+            background-color: #f1f5f9;
+            border: 4px solid var(--card-bg);
+            outline: 1px solid #cbd5e1;
+            border-radius: 50%;
+            transition: all 0.6s ease;
+        }
+
+        /* The Label */
+        .label {
+            position: absolute;
+            top: 30px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            width: 120px;
+            transition: all 0.6s ease;
+        }
+
+        /* -- Active/Completed States -- */
+
+        /* Completed (Past) */
+        .marker-container.completed .dot {
+            background-color: var(--success-green);
+            outline-color: var(--success-green);
+        }
+        .marker-container.completed .label {
+            color: var(--primary-blue);
+        }
+
+        /* Active (Current Pulse) */
+        .marker-container.active .dot {
+            background-color: white;
+            border-color: var(--success-green);
+            outline: none;
+            transform: scale(1.3);
+            animation: pulse 2s infinite;
+        }
+        .marker-container.active .label {
+            color: var(--success-green);
+            font-weight: 800;
+            transform: translateY(-3px);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(45, 106, 79, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0); }
+        }
+
+        /* Status Info Box */
+        .status-info {
+            text-align: center;
+            background: rgba(197, 160, 89, 0.1); /* Gold tint */
+            border: 1px solid rgba(197, 160, 89, 0.4);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 3rem;
+            color: var(--brand-dark);
+        }
+        .status-info span {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        /* --- 4. FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Responsive Tweaks */
+        @media (max-width: 600px) {
+            .header-content { flex-direction: column; gap: 10px; }
+            .label { display: none; } 
+            .marker-container.active .label { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <h1>SecureHealth Insure</h1>
+            <nav>
+                <a href="#coverage">Coverage</a>
+                <a href="#claims">Claims</a>
+                <a href="#tracker">Tracker</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <section id="coverage" class="card">
+            <h2>🏥 Comprehensive Coverage</h2>
+            <p>Your policy ID <strong>SH-99281</strong> covers 100% of in-network surgical procedures, including anesthesia, surgeon fees, and up to 5 days of post-operative hospital stay. No co-pay required for this procedure.</p>
+        </section>
+
+        <section id="claims" class="card">
+            <h2>📝 Instant Claims Processing</h2>
+            <p>We have already received the pre-authorization request from St. Mary's Hospital. The claim will be auto-processed upon discharge. You do not need to file paperwork manually.</p>
+        </section>
+
+        <section id="tracker" class="card">
+            <h2>⏱️ Live Surgical Progress</h2>
+            
+            <div class="demo-badge">
+                ⚠️ Demo Mode: Simulating real-time progress. Updates automatically every 10 seconds.
+            </div>
+
+            <div class="tracker-wrapper">
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+
+                <div class="marker-container" id="step-0" style="left: 0%;">
+                    <div class="dot"></div>
+                    <div class="label">Pre-Op</div>
+                </div>
+
+                <div class="marker-container" id="step-25" style="left: 25%;">
+                    <div class="dot"></div>
+                    <div class="label">Incision</div>
+                </div>
+
+                <div class="marker-container" id="step-50" style="left: 50%;">
+                    <div class="dot"></div>
+                    <div class="label">Procedure</div>
+                </div>
+
+                <div class="marker-container" id="step-75" style="left: 75%;">
+                    <div class="dot"></div>
+                    <div class="label">Closure</div>
+                </div>
+
+                <div class="marker-container" id="step-100" style="left: 100%;">
+                    <div class="dot"></div>
+                    <div class="label">Recovery</div>
+                </div>
+            </div>
+
+            <div class="status-info">
+                Current Stage: <span id="statusText">Waiting to start...</span>
+            </div>
+        </section>
+
+        <section id="contact" class="card">
+            <h2>📞 24/7 Nurse Helpline</h2>
+            <p>If you have urgent concerns about the patient's status, please contact the on-call nurse station directly via our secure line: <strong style="color: var(--accent-blue);">1-800-555-0199</strong>.</p>
+        </section>
+
+    </div>
+
+    <footer>
+        &copy; 2025 SecureHealth Insurance Group. All rights reserved. <br>
+        <small>Privacy Policy | Terms of Service</small>
+    </footer>
+
+    <script>
+        // --- TRACKER CONFIGURATION ---
+        
+        // 1. The Data
+        const stages = [
+            { percent: 0,   text: "Patient Prepped & Anesthesia Administered" },
+            { percent: 25,  text: "Surgical Incision Made - Vitals Stable" },
+            { percent: 50,  text: "Core Procedure in Progress" },
+            { percent: 75,  text: "Suturing & Closure in Progress" },
+            { percent: 100, text: "Transferred to PACU (Recovery Room)" }
+        ];
+
+        let currentIndex = 0;
+        const intervalTime = 10000; // 10 SECONDS (10,000 ms)
+
+        // 2. DOM Elements
+        const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('statusText');
+
+        // 3. The Logic Function
+        function updateTracker() {
+            // Get current stage data
+            const stage = stages[currentIndex];
+
+            // Update Bar Width
+            progressBar.style.width = stage.percent + "%";
+
+            // Update Text
+            statusText.textContent = stage.text;
+
+            // Update Styles for Dots
+            stages.forEach((item) => {
+                const marker = document.getElementById(`step-${item.percent}`);
+                
+                // Remove old states
+                marker.classList.remove('active', 'completed');
+
+                if (item.percent < stage.percent) {
+                    // Past
+                    marker.classList.add('completed');
+                } else if (item.percent === stage.percent) {
+                    // Present (Pulse)
+                    marker.classList.add('active');
+                }
+            });
+
+            // Increment for next loop
+            currentIndex++;
+            if (currentIndex >= stages.length) {
+                currentIndex = 0; // Loop back to start
+            }
+        }
+
+        // 4. Initialize & Set Interval
+        updateTracker(); // Run immediately
+        setInterval(updateTracker, intervalTime); // Run every 10 seconds
+
+    </script>
+</body>
+</html>

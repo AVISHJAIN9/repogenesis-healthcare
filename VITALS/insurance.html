@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sachidaanand Hospital Insurance Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* --- 1. CSS Variables (Sachidanand Palette) --- */
+        :root {
+            /* Primary Brand Colors */
+            --color-primary: #0f4c5c;        /* Deep Teal */
+            --color-primary-dark: #09303a;
+            
+            /* Secondary Brand Colors */
+            --color-secondary: #c5a059;      /* Sacred Gold */
+            --color-accent: #e0cba0;         /* Lighter Gold Accent */
+            
+            /* Backgrounds */
+            --color-bg: #fdfbf7;             /* Organic Cream Background */
+            --color-white: #ffffff;
+            
+            /* Text */
+            --color-text: #09303a;
+            --color-light: #f9fafb;
+            --text-muted: #666666;
+            
+            /* UI */
+            --border-radius: 0.75rem;
+            --box-shadow: 0 8px 20px rgba(15, 76, 92, 0.1);
+            --border-color: rgba(15, 76, 92, 0.2);
+        }
+
+        /* --- Base & Typography --- */
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image: radial-gradient(rgba(15, 76, 92, 0.05) 1px, transparent 1px);
+            background-size: 25px 25px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--color-primary);
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-secondary); /* Gold */
+            color: var(--color-white);
+            border: 2px solid var(--color-secondary);
+        }
+        .btn-primary:hover {
+            background-color: #b08d4b;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+        .btn-secondary:hover {
+            background-color: rgba(15, 76, 92, 0.05);
+            transform: translateY(-2px);
+        }
+        .btn-block {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* --- Navigation (Floating) --- */
+        nav {
+            background-color: var(--color-white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            font-family: 'Cormorant Garamond', serif;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .nav-links a {
+            margin-left: 1.5rem;
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover {
+            color: var(--color-secondary);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            background-color: var(--color-white);
+            padding: 4rem 0;
+            border-bottom: 8px solid var(--color-secondary);
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /* --- Benefits & Coverage Sections --- */
+        .benefits, .coverage-details {
+            padding: 4rem 0;
+        }
+        .benefits {
+            border-bottom: 1px solid #e5e7eb; 
+        }
+
+        .benefits-grid, .coverage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        .benefit-card {
+            background-color: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border-top: 5px solid var(--color-secondary);
+            transition: transform 0.3s;
+        }
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(15, 76, 92, 0.1);
+        }
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            color: var(--color-primary);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .icon {
+            font-size: 2.5rem;
+            color: var(--color-secondary);
+        }
+        
+        .coverage-card {
+            background-color: var(--color-white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            transition: border-color 0.3s;
+        }
+        .coverage-card:hover {
+            border-color: var(--color-primary);
+        }
+        .coverage-card h3 {
+            color: var(--color-secondary);
+            font-size: 1.35rem;
+            border-bottom: 2px solid var(--color-accent);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .coverage-card p {
+            font-size: 1rem;
+            color: var(--text-muted);
+        }
+
+        /* --- PRICING SECTION STYLES --- */
+        .pricing {
+            padding: 4rem 0;
+            background-color: var(--color-light); /* Cream background */
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            align-items: start;
+        }
+        .pricing-card {
+            background-color: var(--color-white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            border-top: 5px solid var(--color-primary);
+            transition: transform 0.3s;
+            position: relative;
+            text-align: center;
+        }
+        .pricing-card:hover {
+            transform: scale(1.03);
+        }
+        .pricing-card.featured {
+            border-top: 5px solid var(--color-secondary);
+            border: 2px solid var(--color-secondary);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+        .pricing-card.featured:hover {
+            transform: scale(1.08);
+        }
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--color-secondary);
+            color: var(--color-text);
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+        .plan-price {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+        }
+        .plan-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+        .plan-features {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+            text-align: left;
+        }
+        .plan-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f3f4f6;
+            color: var(--color-text);
+        }
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        .check-icon {
+            color: var(--color-secondary);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        /* --- Testimonial Section --- */
+        .testimonials {
+            padding: 4rem 0;
+            background-color: var(--color-primary-dark);
+            color: var(--color-white);
+        }
+        .testimonials .section-title {
+            color: var(--color-white);
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .testimonial-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--color-secondary);
+            transition: border-left-color 0.3s;
+        }
+        .testimonial-card p {
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .testimonial-card .author {
+            font-weight: 600;
+            text-align: right;
+            display: block;
+        }
+
+        /* --- Contact/Form Section --- */
+        .contact {
+            padding: 4rem 0;
+            text-align: center;
+        }
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid #e5e7eb;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-primary);
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color); 
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--color-secondary);
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--color-primary-dark);
+            color: var(--color-light);
+            padding: 2rem 0;
+            font-size: 0.9rem;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        footer h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--color-secondary);
+        }
+        footer ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        footer ul li {
+            margin-bottom: 0.5rem;
+        }
+        footer a {
+            color: var(--color-light);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        footer a:hover {
+            color: var(--color-secondary);
+        }
+        .copyright {
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 1024px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links a { margin-left: 1rem; }
+        }
+
+        @media (max-width: 600px) {
+            .nav-content { flex-direction: column; text-align: center; }
+            .nav-links { padding-top: 1rem; }
+            .nav-links a { display: block; margin: 0.5rem 0; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .hero-cta { flex-direction: column; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+            .pricing-card.featured { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container nav-content">
+            <a href="#" class="logo">Sachidaanand Insure</a>
+            <div class="nav-links">
+                <a href="#benefits">Benefits</a>
+                <a href="#coverage-details">Coverage</a>
+                <a href="#pricing">Plans & Pricing</a> <a href="#testimonials">Testimonials</a>
+                <a href="#enroll" class="btn btn-primary">Enroll Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <h1>Protect Your Health, Secure Your Future</h1>
+            <p>The exclusive Sachidaanand Hospital Insurance Plan offers comprehensive coverage right where you need it most—at our trusted facility.</p>
+            <div class="hero-cta">
+                <a href="#pricing" class="btn btn-primary">View Plans & Prices</a>
+                <a href="#coverage-details" class="btn btn-secondary">View Details</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits" class="benefits">
+        <div class="container">
+            <h2 class="section-title">Why Choose Sachidaanand Insurance?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <span class="icon">🏥</span>
+                    <h3>In-House Coverage</h3>
+                    <p>Seamless, cashless treatment at Sachidaanand Hospital with direct claim settlement. No paperwork hassle.</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="icon">👨‍⚕️</span>
+                    <h3>Specialist Access</h3>
+                    <p>Priority access to all our leading specialists, surgeons, and advanced diagnostic facilities.</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="icon">💰</span>
+                    <h3>Affordable Premiums</h3>
+                    <p>Custom plans designed for our community, ensuring high coverage at competitive, accessible rates.</p>
+                </div>
+                <div class="benefit-card">
+                    <span class="icon">🚑</span>
+                    <h3>Emergency & ICU</h3>
+                    <p>Full coverage for ICU stays, emergency procedures, and ambulance services within the city limits.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="coverage-details" class="coverage-details" style="background-color: var(--color-white);">
+        <div class="container">
+            <h2 class="section-title" style="margin-bottom: 1.5rem;">Core Coverage Details</h2>
+            <p style="text-align: center; margin-bottom: 3rem; color: var(--text-muted);">A breakdown of what's fully covered under the Sachidaanand Exclusive Plan.</p>
+            <div class="coverage-grid">
+                <div class="coverage-card">
+                    <h3>Inpatient Hospitalization</h3>
+                    <p>Covers expenses for a minimum of 24 hours hospitalization, including room rent, nursing charges, doctor fees, and ICU costs.</p>
+                </div>
+                <div class="coverage-card">
+                    <h3>Pre & Post Hospitalization</h3>
+                    <p>Expenses incurred for diagnostic tests, consultations, and medication up to **30 days before admission** and **60 days after discharge**.</p>
+                </div>
+                <div class="coverage-card">
+                    <h3>Daycare Procedures</h3>
+                    <p>Coverage for all treatments and surgeries requiring less than 24 hours of hospitalization due to advanced technology.</p>
+                </div>
+                <div class="coverage-card">
+                    <h3>Annual Health Check-Up</h3>
+                    <p>One complimentary full body health check-up is included for all members aged 18 and above.</p>
+                </div>
+                <div class="coverage-card">
+                    <h3>Ambulance Cover</h3>
+                    <p>Emergency ambulance services are covered up to a set limit per hospitalization within the city limits.</p>
+                </div>
+                <div class="coverage-card">
+                    <h3>Maternity Benefit</h3>
+                    <p>Coverage for maternity-related expenses, including delivery (normal or C-section), after a waiting period.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <h2 class="section-title">Simple, Transparent Pricing</h2>
+            <div class="pricing-grid">
+                
+                <div class="pricing-card">
+                    <div class="plan-name">Individual Plan</div>
+                    <div class="plan-price">₹5,999 <span>/ year</span></div>
+                    <ul class="plan-features">
+                        <li><span class="check-icon">✓</span> Coverage: <strong>₹5 Lakhs</strong></li>
+                        <li><span class="check-icon">✓</span> 1 Adult</li>
+                        <li><span class="check-icon">✓</span> Cashless Hospitalization</li>
+                        <li><span class="check-icon">✓</span> Pre/Post Hospitalization</li>
+                        <li><span class="check-icon">✓</span> Annual Health Checkup</li>
+                    </ul>
+                    <a href="#enroll" onclick="selectPlan('individual')" class="btn btn-secondary btn-block">Choose Individual</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <div class="plan-name">Family Floater</div>
+                    <div class="plan-price">₹12,499 <span>/ year</span></div>
+                    <ul class="plan-features">
+                        <li><span class="check-icon">✓</span> Coverage: <strong>₹10 Lakhs</strong></li>
+                        <li><span class="check-icon">✓</span> 2 Adults + 2 Children</li>
+                        <li><span class="check-icon">✓</span> Cashless Hospitalization</li>
+                        <li><span class="check-icon">✓</span> Maternity Benefits included</li>
+                        <li><span class="check-icon">✓</span> Annual Health Checkup (x2)</li>
+                    </ul>
+                    <a href="#enroll" onclick="selectPlan('family')" class="btn btn-primary btn-block">Choose Family</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="plan-name">Senior Citizen</div>
+                    <div class="plan-price">₹9,999 <span>/ year</span></div>
+                    <ul class="plan-features">
+                        <li><span class="check-icon">✓</span> Coverage: <strong>₹5 Lakhs</strong></li>
+                        <li><span class="check-icon">✓</span> 1 Senior Citizen (60+)</li>
+                        <li><span class="check-icon">✓</span> Critical Illness Cover</li>
+                        <li><span class="check-icon">✓</span> Daycare Procedures</li>
+                        <li><span class="check-icon">✓</span> Monthly Doctor Consult</li>
+                    </ul>
+                    <a href="#enroll" onclick="selectPlan('senior')" class="btn btn-secondary btn-block">Choose Senior</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Members Say</h2>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p>"When I needed emergency surgery, the Sachidaanand plan handled everything instantly. The focus was entirely on my recovery, not the bill."</p>
+                    <span class="author">— Ramesh K., Policy Holder since 2021</span>
+                </div>
+                <div class="testimonial-card">
+                    <p>"The customer service is outstanding. They clarified all my doubts about policy renewal quickly and politely. Excellent value."</p>
+                    <span class="author">— Priya M., Family Plan Subscriber</span>
+                </div>
+                <div class="testimonial-card">
+                    <p>"Being able to access all the specialty care at Sachidaanand Hospital without worrying about out-of-pocket costs has been a lifesaver for my parents."</p>
+                    <span class="author">— Sanjay D., Senior Citizen Plan</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="enroll" class="contact">
+        <div class="container">
+            <h2 class="section-title">Start Your Enrollment Today</h2>
+            <p style="max-width: 600px; margin: 0 auto 2rem; color: var(--text-muted);">Fill out the form below, and a dedicated insurance consultant will contact you within 24 hours.</p>
+            
+            <div class="contact-form">
+                <form onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required placeholder="John Doe">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" required placeholder="+91 98765 43210">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="plan">Preferred Plan Type</label>
+                        <select id="plan" required>
+                            <option value="">-- Select a Plan --</option>
+                            <option value="individual">Individual Plan (₹5,999/yr)</option>
+                            <option value="family">Family Floater Plan (₹12,499/yr)</option>
+                            <option value="senior">Senior Citizen Plan (₹9,999/yr)</option>
+                            <option value="corporate">Corporate Inquiry</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Request Consultation</button>
+                    
+                    <p id="formMessage" style="margin-top: 1rem; color: var(--color-secondary); font-weight: 600; display: none;"></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#benefits">Key Advantages</a></li>
+                        <li><a href="#coverage-details">Coverage Details</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="#">Claim Process</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li>Email: insure@sachidaanand.com</li>
+                        <li>Phone: +91 080 XXXX YYYY</li>
+                        <li>Address: 123 Health Blvd, Sachidaanand City</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Follow Us</h4>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Twitter (X)</a></li>
+                    </ul>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2025 Sachidaanand Hospital Insurance. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Helper function to auto-select plan in form when clicking a pricing card
+        function selectPlan(planValue) {
+            const select = document.getElementById('plan');
+            select.value = planValue;
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const formMessage = document.getElementById('formMessage');
+            
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const plan = document.getElementById('plan').value;
+
+            if (!name || !phone || !plan) {
+                formMessage.textContent = "Please fill in all fields.";
+                formMessage.style.color = "var(--color-danger)"; // Use danger color
+                formMessage.style.display = "block";
+                return;
+            }
+
+            formMessage.textContent = `Thank you, ${name}! Your request for the ${plan} plan has been submitted. We will call you soon!`;
+            formMessage.style.color = "var(--color-secondary)";
+            formMessage.style.display = "block";
+            
+            setTimeout(() => {
+                event.target.reset();
+                formMessage.style.display = "none";
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

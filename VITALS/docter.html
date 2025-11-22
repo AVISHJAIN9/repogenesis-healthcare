@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Specialist - Sachidaanand Health</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* --- 1. VARIABLES (Sachidanand Palette) --- */
+        :root {
+            --brand-blue: #0f4c5c;       /* Deep Teal */
+            --brand-cyan: #c5a059;       /* Sacred Gold */
+            --brand-dark: #09303a;       /* Darkest Teal */
+            
+            --text-light: #f8fafc;
+            --color-text-main: #09303a;
+            --color-text-muted: #666666;
+            
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 8px 32px 0 rgba(15, 76, 92, 0.1);
+            
+            --bg-body: #fdfbf7; /* Organic Cream */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--brand-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(15, 76, 92, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 76, 92, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* --- ADDED: NAVIGATION BAR --- */
+        .main-nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 15px 5%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 2000;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .nav-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem; 
+            font-weight: 700;
+            color: var(--brand-blue); 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .nav-links {
+            display: flex; gap: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: 0.3s;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--brand-blue);
+        }
+
+        /* --- HERO HEADER (Updated to Dark Teal Background) --- */
+        .header {
+            position: relative;
+            height: 45vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-align: center;
+            color: white;
+            margin-top: 60px; /* Offset for fixed nav */
+            /* Dark Background as requested */
+            background: linear-gradient(135deg, var(--brand-dark), var(--brand-blue));
+            box-shadow: 0 10px 30px rgba(15, 76, 92, 0.2);
+            border-radius: 0 0 50px 50px;
+        }
+
+        /* Decorative Pattern on Dark Background */
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(var(--brand-cyan) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            animation: fadeInUp 1s ease forwards;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            color: var(--brand-cyan); /* Gold text on Dark BG */
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            opacity: 0.9;
+            color: #f0f0f0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .container {
+            max-width: 1400px;
+            margin: -60px auto 50px; /* Overlap slightly */
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-and-filter-area {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        /* --- SIDEBAR FILTERS --- */
+        .filter-sidebar {
+            width: 300px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--glass-shadow);
+            position: sticky;
+            top: 90px;
+            max-height: 85vh;
+            overflow-y: auto;
+            flex-shrink: 0; 
+        }
+
+        .filter-sidebar h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--brand-blue);
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(197, 160, 89, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            transition: 0.2s;
+        }
+
+        .checkbox-group label:hover {
+            color: var(--brand-blue);
+            transform: translateX(5px);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            accent-color: var(--brand-blue);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* --- SEARCH & GRID --- */
+        .main-doctor-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .search-bar {
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 18px 20px 18px 55px;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            background: #ffffff;
+            border-radius: 50px;
+            font-size: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            outline: none;
+            transition: 0.3s;
+            color: var(--brand-blue);
+        }
+        
+        .search-bar input:focus {
+            box-shadow: 0 10px 30px rgba(15, 76, 92, 0.15);
+            border-color: var(--brand-blue);
+        }
+
+        .search-bar::before {
+            content: '\f002';
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brand-cyan); 
+            font-size: 1.2rem;
+            z-index: 5;
+        }
+
+        /* --- DOCTOR CARDS --- */
+        .products-lists {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 25px;
+            position: relative;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(15, 76, 92, 0.15);
+            border-color: var(--brand-blue);
+        }
+
+        /* Image */
+        .img-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border: 3px solid var(--brand-cyan);
+            padding: 3px;
+        }
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Visible Info */
+        .card-visible-info h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            color: var(--brand-dark);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .card-visible-info h4 {
+            font-size: 0.9rem;
+            color: var(--brand-blue);
+            font-weight: 600;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .card-visible-info p {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-bottom: 15px;
+        }
+
+        /* Hover Content */
+        .content {
+            background: #f8fafc;
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: auto;
+            border: 1px dashed rgba(15, 76, 92, 0.1);
+        }
+        .content h2 {
+            font-size: 0.9rem;
+            color: var(--brand-dark);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .content p {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            line-height: 1.4;
+            margin-bottom: 15px;
+            height: 40px; 
+            overflow: hidden;
+        }
+
+        .content a {
+            display: inline-block;
+            padding: 10px 25px;
+            background: var(--brand-blue);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(15, 76, 92, 0.2);
+        }
+        .content a:hover {
+            background: var(--brand-cyan);
+            transform: scale(1.05);
+        }
+
+        .card.hidden { display: none; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .filter-sidebar::-webkit-scrollbar { width: 5px; }
+        .filter-sidebar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        /* --- ADDED: FOOTER --- */
+        .main-footer {
+            background: var(--brand-dark);
+            color: white;
+            padding: 80px 20px 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 60px;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2em;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            margin-right: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .social-links a:hover {
+            background: var(--brand-cyan);
+            color: var(--brand-dark);
+            transform: translateY(-3px);
+        }
+
+        .footer-col h4 {
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: var(--brand-cyan);
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a {
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            transition: color 0.2s;
+        }
+        .footer-col ul li a:hover { color: var(--brand-cyan); padding-left: 5px; }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .search-and-filter-area { flex-direction: column; }
+            .filter-sidebar { width: 100%; max-height: none; position: static; }
+            .header h1 { font-size: 2.5rem; }
+            .checkbox-group { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+        }
+        @media (max-width: 600px) {
+            .checkbox-group { grid-template-columns: 1fr; }
+            .nav-links { display: none; } /* Basic hide for mobile */
+        }
+    </style>
+</head>
+<body>
+    
+    <nav class="main-nav">
+        <a href="main.html" class="nav-brand">
+            <i class="fas fa-lotus" style="color: var(--brand-cyan);"></i> Sachidanand
+        </a>
+        <div class="nav-links">
+            <a href="main.html">Home</a>
+            <a href="packages.html">Pharmacy</a>
+            <a href="docter.html" class="active">Doctors</a>
+            <a href="emergency.html">Contact</a>
+        </div>
+    </nav>
+
+    <div class="header">
+        <div class="header-content">
+            <h1>Find Your Specialist</h1>
+            <p>Connect with world-class doctors for your specific needs.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="search-and-filter-area">
+            
+            <div class="filter-sidebar">
+                <h2>Filter by Specialty</h2>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" value="Cardiac Sciences" onchange="filterDoctors()"> Cardiac Sciences</label>
+                    <label><input type="checkbox" value="Oncology" onchange="filterDoctors()"> Oncology</label>
+                    <label><input type="checkbox" value="Neurosciences" onchange="filterDoctors()"> Neurosciences</label>
+                    <label><input type="checkbox" value="Orthopaedics" onchange="filterDoctors()"> Orthopaedics & Spine</label>
+                    <label><input type="checkbox" value="Gastroenterology" onchange="filterDoctors()"> Gastroenterology</label>
+                    <label><input type="checkbox" value="Renal Sciences" onchange="filterDoctors()"> Renal Sciences</label>
+                    <label><input type="checkbox" value="Paediatrics" onchange="filterDoctors()"> Paediatrics</label>
+                    <label><input type="checkbox" value="Gynaecology" onchange="filterDoctors()"> Gynaecology & IVF</label>
+                    <label><input type="checkbox" value="Pulmonology" onchange="filterDoctors()"> Pulmonology</label>
+                    <label><input type="checkbox" value="Endocrinology" onchange="filterDoctors()"> Endocrinology</label>
+                    <label><input type="checkbox" value="Others" onchange="filterDoctors()"> Other Specialties</label>
+                </div>
+            </div>
+
+            <div class="main-doctor-view">
+                
+                <div class="search-bar">
+                    <input type="text" id="find" placeholder="Search doctor name, specialty, or condition..." onkeyup="filterDoctors()">
+                </div>
+                
+                <div class="products-lists" id="doctor-list">
+                    
+                    <div class="card" data-specialty="Cardiac Sciences">
+                        <div class="img-box"><img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Amit Sharma</h3><h4>Cardiology</h4><p>22 years experience</p></div>
+                        <div class="content"><h2>Cardiology</h2><p>Coronary Artery Disease, Angioplasty, Heart Attacks.</p><a href="BOOKAPPOINTMENT.HTML">Book Appointment</a></div>
+                    </div>
+                    <div class="card" data-specialty="Cardiac Sciences">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Priya Reddy</h3><h4>Cardiothoracic Surgery</h4><p>18 years experience</p></div>
+                        <div class="content"><h2>Surgery</h2><p>Bypass Surgery (CABG), Valve Replacement.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                    <div class="card" data-specialty="Oncology">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/men/85.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Vikram Singh</h3><h4>Medical Oncology</h4><p>20 years experience</p></div>
+                        <div class="content"><h2>Oncology</h2><p>Chemotherapy, Immunotherapy, Lung Cancer.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+                    <div class="card" data-specialty="Oncology">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Aisha Khan</h3><h4>Surgical Oncology</h4><p>17 years experience</p></div>
+                        <div class="content"><h2>Surgical Onco</h2><p>Tumour Removal, Breast Cancer Surgery.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                    <div class="card" data-specialty="Neurosciences">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/men/11.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Siddharth Mehta</h3><h4>Neurology</h4><p>16 years experience</p></div>
+                        <div class="content"><h2>Neurology</h2><p>Stroke, Epilepsy, Parkinson's, Migraine.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+                    <div class="card" data-specialty="Neurosciences">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/women/33.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Ananya Desai</h3><h4>Neurosurgery</h4><p>24 years experience</p></div>
+                        <div class="content"><h2>Neurosurgery</h2><p>Brain Tumour Surgery, Spine Surgery.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                    <div class="card" data-specialty="Orthopaedics">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Rajeshwari Iyer</h3><h4>Joint Replacement</h4><p>25 years experience</p></div>
+                        <div class="content"><h2>Orthopaedics</h2><p>Knee Replacement, Hip Replacement.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+                    <div class="card" data-specialty="Orthopaedics">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Alok Tiwari</h3><h4>Sports Medicine</h4><p>14 years experience</p></div>
+                        <div class="content"><h2>Sports Med</h2><p>ACL Reconstruction, Shoulder Dislocation.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                    <div class="card" data-specialty="Gastroenterology">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Imran Qureshi</h3><h4>Gastroenterology</h4><p>19 years experience</p></div>
+                        <div class="content"><h2>Gastro</h2><p>Acidity (GERD), IBS, Liver Cirrhosis.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                    <div class="card" data-specialty="Renal Sciences">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/women/12.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Divya Nair</h3><h4>Nephrology</h4><p>17 years experience</p></div>
+                        <div class="content"><h2>Nephrology</h2><p>Kidney Disease (CKD), Dialysis.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                    <div class="card" data-specialty="Paediatrics">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/men/76.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Harish Patel</h3><h4>Paediatrics</h4><p>18 years experience</p></div>
+                        <div class="content"><h2>Paediatrics</h2><p>Vaccinations, Infections, Child Health.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                    <div class="card" data-specialty="Gynaecology">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/women/29.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Kavita Rao</h3><h4>Obstetrics</h4><p>22 years experience</p></div>
+                        <div class="content"><h2>Gynaecology</h2><p>Pregnancy, Delivery, Fibroids.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                    <div class="card" data-specialty="Others">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/men/55.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Manoj Verma</h3><h4>Internal Medicine</h4><p>25 years experience</p></div>
+                        <div class="content"><h2>Medicine</h2><p>Infectious Diseases, Fever, Chronic Illness.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+                    <div class="card" data-specialty="Others">
+                        <div class="img-box"><img src="https://randomuser.me/api/portraits/women/90.jpg" alt="Doctor"></div>
+                        <div class="card-visible-info"><h3>Dr. Lakshmi Iyer</h3><h4>Dermatology</h4><p>10 years experience</p></div>
+                        <div class="content"><h2>Derma</h2><p>Acne, Eczema, Hair Loss.</p><a href="bamit.html">Book Appointment</a></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>Sachidanand Health</h3>
+                <p style="color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 20px;">
+                    Delivering the future of healthcare today. Compassion meets innovation in the heart of Sachidaanand City.
+                </p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Find a Doctor</a></li>
+                    <li><a href="#">Book Appointment</a></li>
+                    <li><a href="#">Health Checkups</a></li>
+                    <li><a href="#">Virtual Consult</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Specialties</h4>
+                <ul>
+                    <li><a href="#">Cardiac Sciences</a></li>
+                    <li><a href="#">Neurosciences</a></li>
+                    <li><a href="#">Oncology</a></li>
+                    <li><a href="#">Orthopedics</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="#">Help Desk</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2025 Sachidanand Health Care Ltd. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script>
+        function filterDoctors() {
+            const searchInput = document.getElementById('find').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]');
+            
+            // Get selected specialties
+            const selectedSpecialties = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            cards.forEach(card => {
+                const doctorName = card.querySelector('h3').innerText.toLowerCase();
+                const specialty = card.querySelector('h4').innerText.toLowerCase();
+                const contentText = card.querySelector('.content p').innerText.toLowerCase();
+                const cardSpecialty = card.getAttribute('data-specialty');
+
+                // Check Search Term
+                const matchesSearch = doctorName.includes(searchInput) || 
+                                      specialty.includes(searchInput) || 
+                                      contentText.includes(searchInput);
+
+                // Check Filter
+                const matchesFilter = selectedSpecialties.length === 0 || selectedSpecialties.includes(cardSpecialty);
+
+                if (matchesSearch && matchesFilter) {
+                    card.classList.remove('hidden');
+                    // Trigger animation
+                    card.style.animation = 'none';
+                    card.offsetHeight; /* trigger reflow */
+                    card.style.animation = 'fadeInUp 0.5s ease forwards';
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

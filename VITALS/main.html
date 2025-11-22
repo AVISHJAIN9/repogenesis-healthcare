@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sachidanand Health | Holistic Wellness</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. BRAND VARIABLES --- */
+        :root {
+            /* Primary: Deep Healing Teal */
+            --color-primary: #0f4c5c; 
+            --color-primary-dark: #09303a;
+            
+            /* Accent: Sacred Gold */
+            --color-gold: #c5a059;
+            --color-gold-light: #e0cba0;
+            
+            /* Backgrounds: Organic Cream */
+            --color-bg: #fdfbf7;
+            --color-surface: #ffffff;
+            
+            /* Text */
+            --color-text-main: #1a1a1a;
+            --color-text-muted: #666666;
+            
+            /* Shadows */
+            --shadow-soft: 0 20px 40px rgba(15, 76, 92, 0.08);
+            --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: var(--color-text-main);
+            position: relative;
+        }
+
+        /* Texture Overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Ambient Aura Blobs */
+        .aura {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            opacity: 0.5;
+            animation: float 20s infinite alternate;
+        }
+        .aura-1 {
+            top: -10%; right: -10%; width: 50vw; height: 50vw;
+            background: radial-gradient(circle, var(--color-gold-light), transparent);
+        }
+        .aura-2 {
+            bottom: -10%; left: -10%; width: 60vw; height: 60vw;
+            background: radial-gradient(circle, rgba(15, 76, 92, 0.15), transparent);
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(20px, 40px); }
+        }
+
+        /* --- 3. NAVIGATION --- */
+        .main-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.8);
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000;
+            box-shadow: var(--shadow-glass);
+            transition: 0.3s ease;
+        }
+
+        .nav-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .nav-brand i { color: var(--color-gold); }
+
+        .nav-links { 
+            display: flex; 
+            gap: 15px; 
+            align-items: center; 
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 10px 15px; 
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: white;
+            background: var(--color-primary);
+        }
+
+        /* Styling for the Emergency Button */
+        .emergency-btn {
+            background-color: #ff3333 !important; /* Urgent Red */
+            color: white !important;
+            font-weight: 700 !important;
+            padding: 10px 25px !important;
+            border-radius: 50px !important;
+            box-shadow: 0 5px 15px rgba(255, 51, 51, 0.4);
+            animation: pulse 1.5s infinite; /* Attention-grabbing pulse effect */
+        }
+
+        .emergency-btn:hover {
+            background: var(--color-primary-dark) !important;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            animation-play-state: paused;
+        }
+        
+        .emergency-btn i { margin-right: 5px; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* --- SIDEBAR & TOGGLE STYLES (NEW) --- */
+        
+        /* The Three Dot / Toggle Button */
+        .menu-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 15px;
+            padding: 5px;
+            transition: 0.3s;
+        }
+        .menu-toggle-btn:hover { color: var(--color-gold); transform: rotate(90deg); }
+
+        /* The Sliding Sidebar */
+        .side-narrative {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 320px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+            z-index: 2000;
+            transform: translateX(100%); /* Hidden by default */
+            transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-narrative.active {
+            transform: translateX(0); /* Slide in */
+        }
+
+        .side-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 20px;
+        }
+
+        .side-header h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--color-primary);
+        }
+
+        .close-side-btn {
+            background: none; border: none;
+            font-size: 1.5rem; color: var(--color-text-muted);
+            cursor: pointer; transition: 0.3s;
+        }
+        .close-side-btn:hover { color: #ff3333; transform: scale(1.1); }
+
+        .side-links {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .side-links a {
+            text-decoration: none;
+            font-size: 1.1rem;
+            color: var(--color-primary-dark);
+            padding: 12px;
+            border-radius: 10px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 500;
+        }
+
+        .side-links a:hover {
+            background: rgba(15, 76, 92, 0.05);
+            padding-left: 20px;
+            color: var(--color-gold);
+        }
+
+        .side-links i { width: 25px; text-align: center; color: var(--color-gold); }
+
+        /* Book A Bed Button (Special Style) */
+        .book-bed-btn {
+            margin-top: 30px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+            color: white !important;
+            text-align: center;
+            justify-content: center;
+            padding: 15px !important;
+            border-radius: 50px !important;
+            font-weight: 600 !important;
+            box-shadow: 0 10px 20px rgba(15, 76, 92, 0.3);
+            letter-spacing: 1px;
+        }
+        .book-bed-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(15, 76, 92, 0.4);
+            background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light)) !important;
+        }
+
+        .logout-form-side { margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); }
+        .logout-btn-side {
+            width: 100%; padding: 12px; background: transparent;
+            border: 1px solid #ff3333; color: #ff3333;
+            border-radius: 30px; cursor: pointer; font-weight: 600; transition: 0.3s;
+        }
+        .logout-btn-side:hover { background: #ff3333; color: white; }
+
+        /* --- 4. HERO SECTION --- */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            perspective: 1000px; 
+        }
+
+        /* Giant Background Text */
+        .hero-bg-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11vw; 
+            font-weight: 700;
+            color: var(--color-primary);
+            opacity: 0.08;
+            white-space: nowrap;
+            z-index: 1;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 20px;
+        }
+
+        /* --- THE 3D SLIDER --- */
+        .banner-slider {
+            position: absolute;
+            width: 200px; 
+            height: 280px; 
+            top: 30%; 
+            transform-style: preserve-3d; 
+            animation: autoRun 35s linear infinite;
+            z-index: 5;
+        }
+
+        @keyframes autoRun {
+            from { transform: perspective(1000px) rotateX(-10deg) rotateY(0deg); }
+            to { transform: perspective(1000px) rotateX(-10deg) rotateY(360deg); }
+        }
+
+        .banner-slider:hover { animation-play-state: paused; cursor: grab; }
+
+        .banner-slider .item {
+            position: absolute;
+            inset: 0;
+            transform: rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(500px); 
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            background: #fff;
+        }
+
+        .banner-slider .item img {
+            width: 100%; height: 100%; object-fit: cover;
+            filter: sepia(20%) contrast(110%); 
+            transition: transform 0.5s;
+        }
+        
+        .banner-slider .item:hover img { transform: scale(1.1); filter: sepia(0%); }
+
+        /* Foreground Content */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            margin-top: 450px; 
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 40px 60px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: var(--shadow-glass);
+            animation: fadeInUp 1s ease forwards;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--color-primary-dark);
+            line-height: 1.1;
+        }
+
+        .hero-content h1 span {
+            color: var(--color-gold);
+            font-style: italic;
+        }
+
+        .hero-content p {
+            color: var(--color-text-muted);
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .search-box {
+            display: flex;
+            background: white;
+            padding: 6px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid var(--color-gold-light);
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 15px 25px;
+            font-size: 1rem;
+            width: 100%;
+            background: transparent;
+            color: var(--color-primary);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .search-box button {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+        .search-box button:hover { background: var(--color-gold); }
+
+
+        /* --- 5. CARDS SECTION --- */
+        .cards-section {
+            padding: 120px 5% 50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-header { text-align: center; margin-bottom: 80px; }
+        .section-header h2 { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem; 
+            margin-bottom: 15px; 
+            color: var(--color-primary-dark); 
+        }
+        .section-header p { color: var(--color-gold); font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; }
+
+        .cards-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 50px; }
+
+        .card {
+            position: relative;
+            width: 320px;
+            height: 450px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .card .img-box {
+            position: absolute;
+            top: 20px;
+            width: 280px;
+            height: 280px;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 2;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .card .img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
+
+        .card .disease-label {
+            position: absolute; bottom: 40px; 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem; font-weight: 700;
+            color: var(--color-primary-dark); 
+            transition: 0.6s; z-index: 2;
+            background: rgba(255,255,255,0.9); 
+            padding: 10px 25px; border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .card:hover { transform: translateY(-10px); box-shadow: 0 30px 60px rgba(197, 160, 89, 0.2); border-color: var(--color-gold); }
+        .card:hover .img-box { top: -50px; width: 100%; height: 100%; border-radius: 0; opacity: 0.1; }
+        .card:hover .img-box img { transform: scale(1.2); }
+        .card:hover .disease-label { bottom: -80px; opacity: 0; }
+
+        .card .content {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, 50%);
+            width: 80%; text-align: center;
+            opacity: 0; transition: 0.6s; z-index: 3;
+        }
+        .card:hover .content { transform: translate(-50%, -50%); opacity: 1; }
+        
+        .card .content h3 { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem; color: var(--color-primary); margin-bottom: 15px; 
+        }
+        .card .content p { font-size: 0.95rem; color: var(--color-text-main); margin-bottom: 25px; line-height: 1.6; }
+        .card .content a {
+            display: inline-block; padding: 12px 30px; 
+            background: var(--color-primary);
+            color: white; border-radius: 50px; text-decoration: none; font-weight: 500;
+            transition: 0.3s; border: 1px solid transparent;
+        }
+        .card .content a:hover { background: transparent; color: var(--color-primary); border-color: var(--color-primary); }
+
+
+        /* --- 6. TESTIMONIALS SECTION (NEW) --- */
+        .testimonials-section {
+            padding: 80px 5%;
+            background: linear-gradient(to bottom, transparent, rgba(15, 76, 92, 0.03));
+            border-top: 1px solid rgba(197, 160, 89, 0.1);
+            margin-bottom: 50px;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        /* Form Side */
+        .feedback-form-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--color-gold-light);
+        }
+
+        .feedback-form-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding-bottom: 10px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 5px; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px; border-radius: 10px;
+            border: 1px solid rgba(15, 76, 92, 0.2);
+            background: #fafafa;
+            font-family: 'Outfit', sans-serif; font-size: 1rem;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--color-gold); background: white;
+        }
+
+        .submit-btn {
+            width: 100%; padding: 12px;
+            background: var(--color-primary);
+            color: white; border: none; border-radius: 50px;
+            font-weight: 600; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .submit-btn:hover { background: var(--color-gold); }
+
+        /* Ticker Side */
+        .ticker-container {
+            height: 500px; 
+            overflow: hidden; 
+            position: relative;
+            display: flex; flex-direction: column;
+        }
+        
+        .ticker-header {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--color-primary-dark);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .scroller-window {
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+        }
+
+        .ticker-track {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            /* Animation handled by JS adding class or inline styles if needed, 
+                but using CSS animation for smooth infinite scroll */
+            animation: scrollUp 30s linear infinite;
+            padding: 20px 0; 
+        }
+        
+        .scroller-window:hover .ticker-track { animation-play-state: paused; }
+
+        @keyframes scrollUp {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); } /* Assuming we duplicate content */
+        }
+
+        .review-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(15, 76, 92, 0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            display: flex;
+            gap: 15px;
+            transition: 0.3s;
+        }
+
+        .review-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .review-avatar {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: var(--color-gold-light);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--color-primary); font-weight: bold; font-size: 1.2rem;
+            flex-shrink: 0; text-transform: uppercase;
+        }
+
+        .review-content h4 {
+            margin: 0; color: var(--color-primary);
+            font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+        }
+
+        .review-content p {
+            margin: 5px 0 0; font-size: 0.9rem; 
+            color: var(--color-text-muted); font-style: italic; line-height: 1.5;
+        }
+
+        .empty-msg {
+            text-align: center; color: #999; margin-top: 50px; font-style: italic;
+        }
+
+
+        /* --- 7. FOOTER --- */
+        .main-footer { 
+            background: var(--color-primary-dark); 
+            color: white;
+            padding: 80px 5% 20px; 
+            position: relative;
+        }
+        
+        .footer-content { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 50px; margin-bottom: 60px; }
+        .footer-left { flex: 1; min-width: 300px; }
+        
+        .brand-logo { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem; font-weight: 700; color: white; margin-bottom: 20px; 
+        }
+        .brand-logo span { color: var(--color-gold); font-style: italic; }
+        
+        .social-icons a {
+            width: 45px; height: 45px; display: inline-flex; justify-content: center; align-items: center;
+            background: rgba(255,255,255,0.1); color: white; border-radius: 50%; margin-right: 10px;
+            text-decoration: none; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .social-icons a:hover { background: var(--color-gold); color: var(--color-primary-dark); transform: translateY(-3px); }
+        
+        .footer-links-grid { flex: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 40px; }
+        .link-column h4 { margin-bottom: 25px; color: var(--color-gold); font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; letter-spacing: 1px; }
+        .link-column ul { list-style: none; }
+        .link-column li { margin-bottom: 12px; }
+        .link-column a { text-decoration: none; color: rgba(255,255,255,0.7); font-size: 0.9rem; transition: 0.3s; }
+        .link-column a:hover { color: var(--color-gold); padding-left: 5px; }
+        
+        .footer-bottom { 
+            text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); 
+            color: rgba(255,255,255,0.4); font-size: 0.85rem; 
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-nav { width: 100%; border-radius: 0; top: 0; padding: 15px 20px; }
+            .nav-links a:not(.emergency-btn) { display: none; } /* Hide text links on mobile, keep emergency */
+            .banner-slider { width: 140px; height: 200px; top: 20%; }
+            .banner-slider .item { transform: rotateY(calc( (var(--position) - 1) * (360 / var(--quantity)) * 1deg)) translateZ(350px); }
+            .hero-content { margin-top: 350px; width: 90%; padding: 30px 20px; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .search-box { flex-direction: column; }
+            .search-box button { width: 100%; margin-top: 10px; }
+            .hero-bg-text { font-size: 20vw; }
+            
+            .testimonial-grid { grid-template-columns: 1fr; }
+            .ticker-container { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="aura aura-1"></div>
+    <div class="aura aura-2"></div>
+
+    <nav class="main-nav">
+        <a href="#" class="nav-brand">
+            <i class="fas fa-lotus"></i> Sachidanand
+        </a>
+        <div class="nav-links">
+            <a href="#" class="active">Home</a>
+            <a href="ourservices (4).html">Our Services</a>
+            <a href="docter.html">Doctors</a>
+            
+            <a href="emergency.html" class="emergency-btn">
+                <i class="fas fa-ambulance"></i> Emergency
+            </a>
+
+            <button class="menu-toggle-btn" onclick="toggleSidebar()">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="side-narrative" id="sidebar">
+        <div class="side-header">
+            <h3>Menu</h3>
+            <button class="close-side-btn" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="side-links">
+            <a href="packages.html"><i class="fas fa-gift"></i> Packages</a>
+            <a href="arogyam.html"><i class="fas fa-heartbeat"></i> Aarogyam</a>
+            <a href="patientportal.html"><i class="fas fa-user-circle"></i> Patient Portal</a>
+            <a href="insurance.html"><i class="fas fa-file-medical-alt"></i> Insurance</a>
+
+            <a href="hospitalbed.html" class="book-bed-btn">
+                <i class="fas fa-procedures"></i> Book a Bed
+            </a>
+        </div>
+
+        <form action="/logout" method="POST" class="logout-form-side">
+            <button type="submit" class="logout-btn-side">
+                Logout
+            </button>
+        </form>
+    </div>
+
+    <div class="hero-section">
+        
+        <div class="hero-bg-text">Sachidanand</div>
+
+        <div class="banner-slider" style="--quantity: 9">
+            <div class="item" style="--position: 1"><img src="banner1.png" alt="Hospital Building"></div>
+            <div class="item" style="--position: 2"><img src="banner2.jpg" alt="Doctors"></div>
+            <div class="item" style="--position: 3"><img src="banner3.png" alt="Lab"></div>
+            <div class="item" style="--position: 4"><img src="banner4.jpg" alt="Care"></div>
+            <div class="item" style="--position: 5"><img src="banner5.png" alt="Consultation"></div>
+            <div class="item" style="--position: 6"><img src="banner6.png" alt="Monitor"></div>
+            <div class="item" style="--position: 7"><img src="banner7.png" alt="Reception"></div>
+            <div class="item" style="--position: 8"><img src="banner8.png" alt="Waiting"></div>
+            <div class="item" style="--position: 9"><img src="banner9.jpg" alt="Cardiac"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1>Healing Body,<br><span>Awakening Spirit.</span></h1>
+            <p>Advanced medical science meets the timeless art of compassionate care.</p>
+            <div class="search-box">
+                <input type="text" placeholder="Search doctors, departments, or wellness plans...">
+                <button onclick="window.location.href='docter.html'">Find Care</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="cards-section">
+        <div class="section-header">
+            <p>Our Expertise</p>
+            <h2>Centres of Excellence</h2>
+        </div>
+        
+        <div class="cards-container">
+            
+            <div class="card">
+                <div class="img-box">
+                    <img src="cardiac.png" alt="Cardiac">
+                </div>
+                <div class="disease-label">Cardiac Sciences</div>
+                <div class="content"> 
+                    <h3>Cardiac Sciences</h3>
+                    <p>Comprehensive heart care ranging from non-invasive cardiology to complex bypass surgeries.</p>
+                    <a href="Cardiac.html">Explore</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-box">
+                    <img src="gaestro.jpg" alt="Gastroenterology">
+                </div>
+                <div class="disease-label">Gastroenterology</div>
+                <div class="content"> 
+                    <h3>Gastroenterology</h3>
+                    <p>Advanced diagnosis and treatment for disorders of the digestive system.</p>
+                    <a href="ga">Explore</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="img-box">
+                    <img src="brain.png" alt="Mental Health">
+                </div>
+                <div class="disease-label">Mental Health & Wellness</div>
+                <div class="content"> 
+                    <h3>Mental Health & Wellness</h3>
+                    <p>Integrated psychological support, psychiatry, and counseling for emotional and cognitive well-being.</p>
+                    <a href="xyzgame.html">Explore</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="img-box">
+                    <img src="cancer.png" alt="Surgery">
+                </div>
+                <div class="disease-label">Cancer</div>
+                <div class="content"> 
+                    <h3>Cancer</h3>
+                    <p>State-of-the-art operation theatres equipped for minimally invasive procedures.</p>
+                    <a href="cancer.html">Explore</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-box">
+                    <img src="respiratory.png" alt="Expert Team">
+                </div>
+                <div class="disease-label">Respiratory Sciences</div>
+                <div class="content"> 
+                    <h3>Respiratory Sciences</h3>
+                    <p>A dedicated team of specialists working together to ensure your recovery.</p>
+                    <a href="lungs.html">Explore</a>
+                </div>
+            </div>
+
+        </div> 
+    </div>
+
+    <div class="testimonials-section">
+        <div class="testimonial-grid">
+            
+            <div class="feedback-form-card">
+                <h3>Share Your Healing Journey</h3>
+                <form id="reviewForm">
+                    <div class="form-group">
+                        <label>Your Name</label>
+                        <input type="text" id="revName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Experience</label>
+                        <textarea id="revText" rows="4" required placeholder="Tell us how we helped you..."></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Submit Story</button>
+                </form>
+            </div>
+
+            <div class="ticker-container">
+                <h2 class="ticker-header">Patient Voices</h2>
+                <div class="scroller-window">
+                    <div class="ticker-track" id="reviewTrack">
+                        <div class="empty-msg">Waiting for stories... Be the first to share.</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <div class="brand-logo"><i class="fas fa-lotus"></i> Sachidanand <span>Health</span></div>
+                <p style="color:rgba(255,255,255,0.7); margin-bottom:20px; line-height:1.6;">
+                    We believe in treating the person, not just the disease. Experience world-class healthcare with a touch of divinity.
+                </p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-grid">
+                <div class="link-column">
+                    <h4>Patients</h4>
+                    <ul>
+                        <li><a href="docter.html">Find a Doctor</a></li>
+                        <li><a href="docter.html">Book Appointment</a></li>
+                        <li><a href="packages.html">Health Packages</a></li>
+                        <li><a href="#">International Patients</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h4>Specialties</h4>
+                    <ul>
+                        <li><a href="Cardiac.html">Cardiology</a></li>
+                        <li><a href="gaestro.html">Gaestrology</a></li>
+                        <li><a href="mental-health.html">Mental Health</a></li>
+                        <li><a href="cancer.html">Cancer</a></li>
+                        <li><a href="lungs.html">Respiratory Sciences</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h4>Corporate</h4>
+                    <ul>
+                        <li><a href="aboutus.html.html">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Media</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Sachidanand Health. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        // 1. Tilt Effect
+        VanillaTilt.init(document.querySelectorAll(".card"), {
+            max: 10, speed: 400, glare: true, "max-glare": 0.3, scale: 1.02
+        });
+
+        // 2. Sidebar Toggle Logic (NEW)
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        // 3. Testimonials Logic (Connected to MongoDB)
+        const track = document.getElementById('reviewTrack');
+        const form = document.getElementById('reviewForm');
+
+        // Function: Fetch reviews from the database
+        async function loadReviews() {
+            try {
+                const response = await fetch('/api/reviews'); // Calls our new app.js route
+                const reviews = await response.json();
+                renderReviews(reviews);
+            } catch (error) {
+                console.error("Error loading reviews:", error);
+            }
+        }
+
+        // Function: Display reviews on the screen
+        function renderReviews(reviews) {
+            if (reviews.length === 0) {
+                track.innerHTML = '<div class="empty-msg">Waiting for stories... Be the first to share.</div>';
+                return;
+            }
+
+            // Duplicate list if there are few items (to make the scroll look smooth)
+            const displayList = reviews.length > 3 ? [...reviews, ...reviews] : reviews;
+            
+            track.innerHTML = displayList.map(r => `
+                <div class="review-card">
+                    <div class="review-avatar">${r.name.charAt(0)}</div>
+                    <div class="review-content">
+                        <h4>${r.name}</h4>
+                        <p>"${r.text}"</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Function: Handle Form Submit
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Stop page reload
+            
+            const name = document.getElementById('revName').value;
+            const text = document.getElementById('revText').value;
+
+            // Send data to server
+            const response = await fetch('/api/reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, text })
+            });
+
+            if (response.ok) {
+                form.reset();
+                loadReviews(); // Reload list immediately to show the new review
+                alert("Thank you! Your story has been submitted to the database.");
+            } else {
+                alert("Error submitting review. Please try again.");
+            }
+        });
+
+        // Load reviews when the page opens
+        loadReviews();
+    </script>
+</body>
+</html>

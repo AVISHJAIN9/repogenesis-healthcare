@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24/7 Emergency & Live Dispatch - Satchitanand Health Care</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cormorant+Garamond:wght@600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <style>
+        /* --- CSS VARIABLES (Sachidanand Palette) --- */
+        :root {
+            --color-primary: #0f4c5c;       /* Deep Teal */
+            --color-secondary: #c5a059;     /* Sacred Gold */
+            --color-dark: #09303a;          /* Darkest Teal */
+            --color-bg-cream: #fdfbf7;
+            --color-bg-white: #ffffff;
+            --color-text-main: #09303a; 
+            --color-text-muted: #666666;
+            --color-emergency: #bc4749;     /* Urgent Red */
+            
+            /* Map UI Colors (Dark Mode) */
+            --map-bg-overlay: rgba(17, 24, 39, 0.9);
+            --map-text-light: #f3f4f6;
+            --map-accent-yellow: #fbbf24;
+            --map-accent-red: #ef4444;
+            --map-accent-green: #10b981;
+        }
+
+        /* --- RESET & BASE --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--color-bg-cream);
+            color: var(--color-text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; font-weight: 700; }
+        .mono-font { font-family: 'JetBrains Mono', monospace; }
+
+        /* --- HEADER --- */
+        header {
+            background: var(--color-bg-white);
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+        }
+        .logo { font-size: 1.8rem; color: var(--color-primary); font-weight: 800; letter-spacing: -0.02em; }
+        .logo span { color: var(--color-secondary); }
+        
+        .emergency-badge {
+            background: var(--color-emergency);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: pulse-badge 2s infinite;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+            background: linear-gradient(rgba(15, 76, 92, 0.9), rgba(9, 48, 58, 0.8)), url('https://images.unsplash.com/photo-1516574187841-69301976e99d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 6rem 1rem;
+            position: relative;
+        }
+        .hero-section h1 { font-size: 3.5rem; margin-bottom: 1rem; line-height: 1.1; }
+        .hero-section p { font-size: 1.2rem; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* --- EMERGENCY GRID --- */
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 4rem 5%;
+            margin-top: -3rem;
+            position: relative;
+            z-index: 10;
+        }
+        .emergency-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease;
+            border-top: 4px solid var(--color-secondary);
+        }
+        .emergency-card:hover { transform: translateY(-5px); }
+        .emergency-card i { font-size: 2.5rem; color: var(--color-primary); margin-bottom: 1rem; }
+        .emergency-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; font-family: 'Outfit', sans-serif; }
+        .call-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--color-text-main);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* --- MAP DISPATCH SECTION (The Integration) --- */
+        #live-dispatch-section {
+            position: relative;
+            width: 100%;
+            height: 85vh; /* Tall height for map */
+            background: #111; /* Dark background for map load */
+            overflow: hidden;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+        }
+
+        /* Map Container */
+        #map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* --- MAP UI OVERLAYS (Adapted from Ambulance.html) --- */
+        .map-ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+        }
+
+        /* Status Panel (Top Left) */
+        .status-panel {
+            pointer-events: auto;
+            background: var(--map-bg-overlay);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #374151;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            color: var(--map-text-light);
+            max-width: 300px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .status-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+        .status-dot { width: 12px; height: 12px; background: var(--map-accent-green); border-radius: 50%; box-shadow: 0 0 10px var(--map-accent-green); animation: pulse-green 2s infinite; }
+        .status-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; color: #9ca3af; }
+        .main-status-text { font-size: 1.1rem; font-weight: 700; }
+        .status-meta { font-size: 0.75rem; color: #6b7280; margin-top: 0.5rem; display: flex; justify-content: space-between; }
+
+        /* Driver Card (Top Right) */
+        .driver-card {
+            pointer-events: auto;
+            background: var(--map-bg-overlay);
+            backdrop-filter: blur(12px);
+            border-right: 4px solid var(--map-accent-yellow);
+            padding: 1rem;
+            border-radius: 0.75rem 0 0 0.75rem;
+            color: var(--map-text-light);
+            position: absolute;
+            top: 80px;
+            right: 0;
+            width: 280px;
+            text-align: right;
+            transform: translateX(110%); /* Hidden */
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: -10px 10px 25px rgba(0,0,0,0.5);
+        }
+        .driver-card.active { transform: translateX(0); }
+        .driver-label { font-size: 0.75rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 1px; }
+        .driver-id { font-size: 1.5rem; font-weight: 800; color: white; margin: 4px 0; }
+        .driver-name { color: var(--map-accent-yellow); font-weight: 600; }
+
+        /* Controls Container (Bottom Center) */
+        .controls-container {
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding-bottom: 2rem;
+        }
+
+        /* ETA Panel */
+        .eta-panel {
+            background: var(--map-bg-overlay);
+            backdrop-filter: blur(12px);
+            border: 1px solid #374151;
+            padding: 1.25rem;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 400px;
+            color: white;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .eta-panel.active { transform: translateY(0); opacity: 1; }
+        .eta-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+        .eta-time { font-size: 2rem; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+        .progress-track { background: #374151; height: 6px; border-radius: 10px; overflow: hidden; }
+        .progress-bar { background: linear-gradient(90deg, #ca8a04, #fbbf24); height: 100%; width: 0%; transition: width 0.3s linear; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        
+        /* SOS Button */
+        .sos-wrapper { position: relative; display: flex; justify-content: center; align-items: center; }
+        .sos-ping { position: absolute; width: 100%; height: 100%; border-radius: 50%; background: var(--map-accent-red); opacity: 0.3; animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
+        .sos-btn {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--map-accent-red);
+            border: 4px solid rgba(0,0,0,0.2);
+            color: white;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+            transition: all 0.2s;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .sos-btn:hover { transform: scale(1.05); background: #dc2626; }
+        .sos-btn:active { transform: scale(0.95); }
+        .sos-icon { font-size: 1.5rem; margin-bottom: 2px; }
+        
+        .reset-btn {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #374151;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        .reset-btn span { font-size: 0.7rem; text-transform: uppercase; margin-top: 4px; }
+
+        /* --- LEAFLET CUSTOM STYLES --- */
+        .leaflet-popup-content-wrapper {
+            background: rgba(17, 24, 39, 0.95) !important;
+            color: white !important;
+            backdrop-filter: blur(5px);
+            border-radius: 8px !important;
+        }
+        .leaflet-popup-tip { background: rgba(17, 24, 39, 0.95) !important; }
+        
+        /* Marker Animations */
+        .pulse-ring {
+            border: 2px solid var(--map-accent-red);
+            border-radius: 50%;
+            height: 60px;
+            width: 60px;
+            position: absolute;
+            left: -14px;
+            top: -14px;
+            animation: pulsate 2s ease-out infinite;
+            opacity: 0;
+        }
+        .user-pulse {
+            border: 2px solid #3B82F6;
+            animation: pulsate-blue 3s ease-out infinite;
+        }
+
+        /* --- FOOTER --- */
+        footer { background: var(--color-dark); color: white; padding: 4rem 5% 1rem; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .footer-col h4 { color: var(--color-secondary); margin-bottom: 1.5rem; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 0.8rem; }
+        .footer-col a { color: #ccc; text-decoration: none; transition: 0.3s; }
+        .footer-col a:hover { color: white; }
+        .footer-bottom { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; font-size: 0.9rem; color: #888; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes pulse-badge { 0% { box-shadow: 0 0 0 0 rgba(188, 71, 73, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(188, 71, 73, 0); } 100% { box-shadow: 0 0 0 0 rgba(188, 71, 73, 0); } }
+        @keyframes pulse-green { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
+        @keyframes ping { 75%, 100% { transform: scale(2); opacity: 0; } }
+        @keyframes pulsate { 0% { transform: scale(0.1); opacity: 0; } 50% { opacity: 0.8; } 100% { transform: scale(1.5); opacity: 0; } }
+        @keyframes pulsate-blue { 0% { transform: scale(0.1); opacity: 0; } 50% { opacity: 0.6; } 100% { transform: scale(1.5); opacity: 0; } }
+        
+        /* Utility */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <header>
+        <div class="logo">Satchitanand <span>Health</span></div>
+        <div class="emergency-badge">
+            <i class="fas fa-phone-alt"></i>
+            <span>1066 - EMERGENCY</span>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>In an Emergency, Seconds Count.</h1>
+            <p>Satchitanand Health Care provides world-class emergency response with real-time GPS tracking and advanced life support fleets.</p>
+        </div>
+    </section>
+
+    <!-- Emergency Grid -->
+    <section class="emergency-grid">
+        <div class="emergency-card">
+            <i class="fas fa-ambulance"></i>
+            <h3>Ambulance Service</h3>
+            <p>Advanced Life Support (ALS) and Basic Life Support (BLS) units.</p>
+            <a href="#live-dispatch-section" class="call-btn" style="background-color: var(--color-emergency);">Track Ambulance</a>
+        </div>
+        <div class="emergency-card">
+            <i class="fas fa-heartbeat"></i>
+            <h3>Trauma Center</h3>
+            <p>Level 1 Trauma Care with 24/7 specialists on standby.</p>
+            <a href="tel:1066" class="call-btn">Call 1066</a>
+        </div>
+        <div class="emergency-card">
+            <i class="fas fa-user-md"></i>
+            <h3>Video Consult</h3>
+            <p>Immediate triage with emergency physicians via video.</p>
+            <a href="#" class="call-btn">Connect Now</a>
+        </div>
+    </section>
+
+    <!-- INTEGRATED MAP SECTION -->
+    <section id="live-dispatch-section">
+        
+        <!-- Map Element -->
+        <div id="map"></div>
+
+        <!-- HUD Overlay -->
+        <div class="map-ui-layer">
+            
+            <!-- Top Bar -->
+            <div style="display:flex; justify-content:space-between; width:100%;">
+                <!-- Status Panel -->
+                <div class="status-panel mono-font">
+                    <div class="status-header">
+                        <div class="status-dot"></div>
+                        <span class="status-title">Dispatch Center</span>
+                    </div>
+                    <div id="status-text" class="main-status-text">SYSTEM ACTIVE - READY</div>
+                    <div class="status-meta">
+                        <span>GPS: LOCKED</span>
+                        <span id="active-units">UNITS: 5</span>
+                    </div>
+                </div>
+
+                <!-- Driver Card (Slides in) -->
+                <div id="driver-card" class="driver-card mono-font">
+                    <div class="driver-label">Dispatched Unit</div>
+                    <div class="driver-id" id="driver-unit">UNIT-00</div>
+                    <div class="driver-name" id="driver-name">--</div>
+                    <div class="driver-label" style="margin-top:8px;">Vehicle Class</div>
+                    <div style="color:white; font-size:0.9rem;" id="driver-vehicle">--</div>
+                </div>
+            </div>
+
+            <!-- Bottom Controls -->
+            <div class="controls-container">
+                
+                <!-- ETA Card -->
+                <div id="eta-card" class="eta-panel">
+                    <div class="eta-flex">
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <i class="fas fa-clock" style="font-size:1.5rem; color:var(--map-accent-yellow);"></i>
+                            <div>
+                                <div class="driver-label">Arrival In</div>
+                                <div class="eta-time mono-font" id="eta-time">00:00</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <div class="driver-label">Distance</div>
+                            <div class="mono-font" style="font-size:1.2rem; color:#60a5fa;" id="eta-dist">-- m</div>
+                        </div>
+                    </div>
+                    <div class="progress-track">
+                        <div id="progress-bar" class="progress-bar"></div>
+                    </div>
+                </div>
+
+                <!-- SOS Button Area -->
+                <div class="sos-wrapper">
+                    <div id="sos-ping" class="sos-ping"></div>
+                    
+                    <!-- Main Button -->
+                    <button id="sos-btn" class="sos-btn" onclick="triggerEmergency()">
+                        <i class="fas fa-ambulance sos-icon"></i>
+                        <span>SOS</span>
+                    </button>
+
+                    <!-- Reset Button -->
+                    <button id="reset-btn" class="reset-btn" onclick="resetSimulation()">
+                        <i class="fas fa-redo"></i>
+                        <span>RESET</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Ambulance Types Info -->
+    <section style="padding: 4rem 5%; background:white;">
+        <h2 style="text-align:center; margin-bottom:2rem; color:var(--color-primary); font-size:2.5rem;">Our Emergency Fleet</h2>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:2rem;">
+            <div style="padding:1.5rem; border-left:4px solid var(--color-secondary); background:var(--color-bg-cream);">
+                <h3 style="color:var(--color-dark);">Advanced Life Support (ALS)</h3>
+                <p style="color:#666; margin-top:0.5rem;">Equipped with ventilators, ECG monitors, and defibrillators. Staffed by paramedics and emergency physicians.</p>
+            </div>
+            <div style="padding:1.5rem; border-left:4px solid var(--color-primary); background:var(--color-bg-cream);">
+                <h3 style="color:var(--color-dark);">Basic Life Support (BLS)</h3>
+                <p style="color:#666; margin-top:0.5rem;">For non-life-threatening transport. Equipped with oxygen delivery systems and staffed by emergency technicians.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <div class="logo" style="color:white; margin-bottom:1rem;">Satchitanand <span>Health</span></div>
+                <p style="color:#aaa; font-size:0.9rem;">Providing compassionate care with cutting-edge technology since 1998.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Specialties</h4>
+                <ul>
+                    <li><a href="#">Emergency Medicine</a></li>
+                    <li><a href="#">Cardiac Sciences</a></li>
+                    <li><a href="#">Neurosciences</a></li>
+                    <li><a href="#">Trauma Surgery</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="#">Help Desk: +91 123 456 7890</a></li>
+                    <li><a href="#">Ambulance: 1066</a></li>
+                    <li><a href="#">info@satchitanandhealth.com</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 Satchitanand Health Care Ltd. All Rights Reserved.
+        </div>
+    </footer>
+
+    <!-- LEAFLET & SIMULATION JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script>
+        // --- Configuration ---
+        const CONFIG = {
+            defaultLat: 40.7128,
+            defaultLng: -74.0060,
+            ambulanceCount: 6,
+            speedMps: 20, // Speed simulation
+        };
+
+        const DRIVER_NAMES = ["John Doe", "Sarah Connor", "Rajesh Koothrappali", "Elena Fisher", "David Martinez"];
+        const VEHICLE_TYPES = ["ALS - ICU on Wheels", "BLS - Transport", "Rapid Response Bike"];
+
+        // --- State ---
+        let map;
+        let userMarker;
+        let ambulances = [];
+        let routeLine;
+        let isEmergencyActive = false;
+        let animationFrameId;
+
+        // --- Initialization ---
+        function initMap() {
+            // Dark Mode Map Style
+            map = L.map('map', { zoomControl: false }).setView([CONFIG.defaultLat, CONFIG.defaultLng], 15);
+            
+            // Dark Matter Tiles
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap &copy; CARTO',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            // Disable scroll wheel zoom to prevent page scroll hijacking
+            map.scrollWheelZoom.disable();
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pos => setupScene(pos.coords.latitude, pos.coords.longitude),
+                    () => setupScene(CONFIG.defaultLat, CONFIG.defaultLng)
+                );
+            } else {
+                setupScene(CONFIG.defaultLat, CONFIG.defaultLng);
+            }
+        }
+
+        function setupScene(lat, lng) {
+            map.setView([lat, lng], 15);
+
+            // Clean up existing
+            if(userMarker) map.removeLayer(userMarker);
+            ambulances.forEach(a => map.removeLayer(a));
+            ambulances = [];
+            if(routeLine) map.removeLayer(routeLine);
+
+            // Custom User Icon
+            const userIcon = L.divIcon({
+                className: 'bg-transparent',
+                html: `<div style="position:relative; width:40px; height:40px; display:flex; justify-content:center; align-items:center;">
+                        <div style="position:absolute; width:100%; height:100%; background:rgba(59, 130, 246, 0.3); border-radius:50%; animation:pulsate-blue 3s infinite;"></div>
+                        <div style="width:16px; height:16px; background:#3B82F6; border-radius:50%; border:2px solid white; z-index:10; box-shadow:0 0 10px rgba(59,130,246,0.8);"></div>
+                       </div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            });
+
+            userMarker = L.marker([lat, lng], { icon: userIcon }).addTo(map)
+                .bindPopup("<b>Your Location</b><br>Emergency Response Target");
+
+            generateAmbulances(lat, lng);
+        }
+
+        function generateAmbulances(centerLat, centerLng) {
+            const ambIcon = L.divIcon({
+                className: 'bg-transparent',
+                html: `<div style="width:32px; height:32px; display:flex; justify-content:center; align-items:center;">
+                        <div style="font-size:20px;">🚑</div>
+                       </div>`,
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
+
+            for (let i = 0; i < CONFIG.ambulanceCount; i++) {
+                const latOff = (Math.random() - 0.5) * 0.04; 
+                const lngOff = (Math.random() - 0.5) * 0.04;
+                
+                const m = L.marker([centerLat + latOff, centerLng + lngOff], { icon: ambIcon }).addTo(map);
+                
+                m.data = {
+                    id: `UNIT-${105 + i}`,
+                    driver: DRIVER_NAMES[Math.floor(Math.random() * DRIVER_NAMES.length)],
+                    vehicle: VEHICLE_TYPES[Math.floor(Math.random() * VEHICLE_TYPES.length)]
+                };
+                
+                ambulances.push(m);
+            }
+            
+            document.getElementById('active-units').innerText = `UNITS: ${ambulances.length}`;
+        }
+
+        // --- Logic ---
+
+        function triggerEmergency() {
+            if (isEmergencyActive) return;
+            isEmergencyActive = true;
+
+            // UI Feedback
+            document.getElementById('sos-ping').style.animation = 'none'; 
+            document.getElementById('sos-ping').style.transform = 'scale(3)'; 
+            document.getElementById('sos-ping').style.opacity = '0';
+            
+            updateStatus("CONTACTING DISPATCH...", "#fbbf24"); // Yellow text
+
+            setTimeout(() => {
+                findNearest();
+            }, 1500);
+        }
+
+        function findNearest() {
+            const userLL = userMarker.getLatLng();
+            let closest = null;
+            let minDst = Infinity;
+
+            ambulances.forEach(amb => {
+                const d = userLL.distanceTo(amb.getLatLng());
+                if (d < minDst) {
+                    minDst = d;
+                    closest = amb;
+                }
+            });
+
+            if (closest) {
+                dispatchUnit(closest, minDst);
+            } else {
+                updateStatus("NO UNITS AVAILABLE", "#ef4444");
+                isEmergencyActive = false;
+            }
+        }
+
+        function dispatchUnit(unit, distMeters) {
+            updateStatus(`DISPATCHED: ${unit.data.id}`, "#34d399"); // Green text
+
+            // Update Driver Card
+            document.getElementById('driver-unit').innerText = unit.data.id;
+            document.getElementById('driver-name').innerText = unit.data.driver;
+            document.getElementById('driver-vehicle').innerText = unit.data.vehicle;
+            document.getElementById('driver-card').classList.add('active');
+
+            // Show ETA Card
+            document.getElementById('eta-card').classList.add('active');
+            
+            // Draw Route
+            const userLL = userMarker.getLatLng();
+            const unitLL = unit.getLatLng();
+            
+            routeLine = L.polyline([unitLL, userLL], {
+                color: '#F59E0B', 
+                weight: 4,
+                opacity: 0.8,
+                dashArray: '10, 10',
+                lineCap: 'round'
+            }).addTo(map);
+
+            // Calculate Time
+            const durationSec = Math.max(distMeters / CONFIG.speedMps, 3); 
+            
+            // Active Icon
+            const activeIcon = L.divIcon({
+                className: 'bg-transparent',
+                html: `<div style="position:relative; width:40px; height:40px; display:flex; justify-content:center; align-items:center;">
+                        <div class="pulse-ring" style="opacity:1"></div>
+                        <div style="width:32px; height:32px; background:#ef4444; border-radius:50%; display:flex; justify-content:center; align-items:center; border:2px solid white; box-shadow:0 0 15px #ef4444;">
+                            🚑
+                        </div>
+                       </div>`,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            });
+            unit.setIcon(activeIcon);
+            unit.setZIndexOffset(1000);
+
+            animateMovement(unit, userLL, durationSec * 1000, distMeters);
+        }
+
+        function animateMovement(marker, destination, duration, totalDistance) {
+            const start = performance.now();
+            const startLL = marker.getLatLng();
+            const deltaLat = destination.lat - startLL.lat;
+            const deltaLng = destination.lng - startLL.lng;
+
+            function frame(time) {
+                if (!isEmergencyActive) return;
+                
+                const elapsed = time - start;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const curLat = startLL.lat + (deltaLat * progress);
+                const curLng = startLL.lng + (deltaLng * progress);
+                const curLL = L.latLng(curLat, curLng);
+
+                marker.setLatLng(curLL);
+                routeLine.setLatLngs([curLL, destination]);
+
+                // HUD Updates
+                const remainingDist = totalDistance * (1 - progress);
+                document.getElementById('eta-dist').innerText = `${Math.round(remainingDist)} m`;
+                
+                const remainingSec = Math.ceil((duration - elapsed)/1000);
+                document.getElementById('eta-time').innerText = `00:${remainingSec.toString().padStart(2, '0')}`;
+                document.getElementById('progress-bar').style.width = `${progress * 100}%`;
+
+                if (progress < 1) {
+                    animationFrameId = requestAnimationFrame(frame);
+                } else {
+                    onArrival();
+                }
+            }
+            animationFrameId = requestAnimationFrame(frame);
+        }
+
+        function onArrival() {
+            updateStatus("UNIT ARRIVED", "#60a5fa");
+            document.getElementById('eta-time').innerText = "ARRIVED";
+            
+            const pb = document.getElementById('progress-bar');
+            pb.style.background = "linear-gradient(90deg, #2563eb, #60a5fa)"; // Turn Blue
+            
+            if(routeLine) map.removeLayer(routeLine);
+
+            // Toggle Buttons
+            document.getElementById('sos-btn').style.display = 'none';
+            document.getElementById('reset-btn').style.display = 'flex';
+        }
+
+        function resetSimulation() {
+            isEmergencyActive = false;
+            cancelAnimationFrame(animationFrameId);
+
+            // Reset UI elements
+            document.getElementById('reset-btn').style.display = 'none';
+            document.getElementById('sos-btn').style.display = 'flex';
+            
+            const ping = document.getElementById('sos-ping');
+            ping.style.animation = 'ping 2s cubic-bezier(0, 0, 0.2, 1) infinite';
+            ping.style.transform = 'none';
+            ping.style.opacity = '0.3';
+            
+            document.getElementById('driver-card').classList.remove('active');
+            document.getElementById('eta-card').classList.remove('active');
+            updateStatus("SYSTEM ACTIVE - READY", "#f3f4f6");
+            
+            const pb = document.getElementById('progress-bar');
+            pb.style.width = '0%';
+            pb.style.background = "linear-gradient(90deg, #ca8a04, #fbbf24)";
+
+            setupScene(userMarker.getLatLng().lat, userMarker.getLatLng().lng);
+        }
+
+        function updateStatus(text, color) {
+            const el = document.getElementById('status-text');
+            el.innerText = text;
+            el.style.color = color;
+            
+            // Also update the dot color
+            const dot = document.querySelector('.status-dot');
+            dot.style.background = color;
+            dot.style.boxShadow = `0 0 10px ${color}`;
+        }
+
+        // Start
+        window.onload = initMap;
+    </script>
+</body>
+</html>

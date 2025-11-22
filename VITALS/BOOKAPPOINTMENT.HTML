@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Sharma - Appointment Booking</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* --- CSS VARIABLES (Sachidanand Identity) --- */
+        :root {
+            /* Primary Brand Colors */
+            --primary: #0f4c5c;        /* Deep Healing Teal */
+            --primary-dark: #09303a;
+            --secondary-gold: #c5a059; /* Sacred Gold */
+            --success: #2d6a4f;        /* Dark Green Success */
+            
+            /* Backgrounds & UI */
+            --bg: #fdfbf7;             /* Organic Cream Background */
+            --card-bg: #ffffff;
+            --text-main: #09303a;
+            --text-light: #666666;
+            --border: rgba(15, 76, 92, 0.2);
+            --booked: #e2e8f0;         /* Light Grey for disabled slots */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Changed Outfit to Inter as per link */
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            /* Subtle Background Texture */
+            background-image: radial-gradient(rgba(15, 76, 92, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(15, 76, 92, 0.15);
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+
+        @media(min-width: 768px) {
+            .container {
+                grid-template-columns: 350px 1fr; 
+                min-height: 650px;
+            }
+        }
+
+        /* --- LEFT SIDEBAR (Doctor Info) --- */
+        .sidebar {
+            background: #f8fafc; /* Lighter cream/white tint */
+            padding: 30px;
+            border-right: 1px solid var(--border);
+            text-align: center;
+            border-bottom: 5px solid var(--secondary-gold);
+        }
+
+        /* Doctor Image Style */
+        .doctor-img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 4px solid var(--card-bg);
+            box-shadow: 0 4px 10px rgba(15, 76, 92, 0.2);
+        }
+
+        .doctor-badge {
+            display: inline-block;
+            background: rgba(197, 160, 89, 0.15);
+            color: var(--secondary-gold);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .sidebar h1 { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem; 
+            margin: 0 0 10px 0; 
+            color: var(--primary-dark); 
+        }
+        .sidebar p { color: var(--text-light); line-height: 1.6; font-size: 0.9rem; }
+        
+        .price-tag {
+            margin-top: 25px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: var(--card-bg);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .price-tag span { color: var(--secondary-gold); display: block; font-size: 1.8rem; margin-top: 5px; font-weight: 800;}
+
+        /* --- RIGHT SIDE (Booking Flow) --- */
+        .main-content {
+            padding: 40px;
+        }
+
+        h2 { 
+            font-family: 'Cormorant Garamond', serif;
+            margin-top: 0; 
+            font-size: 1.5rem; 
+            color: var(--primary);
+            border-bottom: 2px solid rgba(15, 76, 92, 0.1); 
+            padding-bottom: 10px; 
+            margin-bottom: 25px; 
+        }
+
+        /* Calendar Styles */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .month-name { font-weight: 700; font-size: 1.2rem; color: var(--primary-dark); }
+        
+        .nav-btn {
+            background: none;
+            border: 1px solid var(--border);
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--primary);
+        }
+        .nav-btn:hover { background: var(--bg); }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .day-name {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            padding-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .day-btn {
+            padding: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            font-size: 0.9rem;
+        }
+        .day-btn:hover { background-color: var(--bg); color: var(--primary); }
+        
+        .day-btn.selected {
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(15, 76, 92, 0.3);
+        }
+        
+        .day-btn.empty { cursor: default; background: none; }
+        .day-btn.empty:hover { background: none; }
+
+        /* Time Slot Grid */
+        .slots-area {
+            margin-top: 30px;
+            display: none; 
+            animation: fadeIn 0.5s ease;
+        }
+
+        .slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+        }
+
+        .time-btn {
+            padding: 10px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            color: var(--primary-dark);
+        }
+
+        .time-btn:hover { border-color: var(--primary); color: var(--primary); }
+        
+        .time-btn.selected {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .time-btn.booked {
+            background-color: var(--booked);
+            color: #94a3b8;
+            text-decoration: line-through;
+            cursor: not-allowed;
+            border-color: var(--booked);
+        }
+
+        /* Payment Section */
+        .payment-area {
+            margin-top: 30px;
+            background: rgba(45, 106, 79, 0.1); /* Subtle green tint */
+            border: 1px solid rgba(45, 106, 79, 0.4);
+            padding: 20px;
+            border-radius: 12px;
+            display: none; 
+            animation: slideUp 0.4s ease;
+        }
+
+        .payment-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .payment-details strong { color: var(--primary-dark); }
+        .payment-details span { color: var(--text-light); }
+
+        .pay-btn {
+            width: 100%;
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .pay-btn:hover { background-color: var(--primary); }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* --- PAYMENT MODAL & CHECKOUT STYLES (ADDED FROM pakaging (1).html) --- */
+        .payment-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+            z-index: 2000; display: none; justify-content: center; align-items: center;
+        }
+        .payment-modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+
+        .payment-modal {
+            background: #fff; width: 90%; max-width: 500px; border-radius: 20px;
+            padding: 0; box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden;
+            position: relative;
+        }
+
+        .payment-header {
+            background: var(--primary); /* Using --primary for consistency */
+            color: white; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .payment-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; }
+        
+        .payment-body { padding: 25px; }
+        
+        .payment-methods { display: flex; gap: 10px; margin-bottom: 20px; }
+        .pay-tab {
+            flex: 1; padding: 10px; text-align: center; border: 1px solid #ddd;
+            border-radius: 10px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem;
+        }
+        .pay-tab.active {
+            background: var(--primary); /* Using --primary for consistency */
+            color: white; border-color: var(--primary);
+        }
+        
+        .payment-section { display: none; animation: fadeIn 0.3s; }
+        .payment-section.active { display: block; }
+
+        /* Credit Card Form */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-light); margin-bottom: 5px; }
+        .form-group input {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 1rem; outline: none; transition: border 0.3s;
+        }
+        .form-group input:focus { border-color: var(--primary); }
+        .form-row { display: flex; gap: 15px; }
+
+        /* QR Code Area */
+        .qr-container { text-align: center; padding: 10px; }
+        .qr-container img { width: 180px; height: 180px; margin-bottom: 15px; border: 1px solid #eee; padding: 10px; border-radius: 10px; }
+        
+        .pay-action-btn {
+            width: 100%; padding: 15px; background: var(--success); /* Using --success for consistency */
+            color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem;
+            cursor: pointer; margin-top: 20px; transition: all 0.3s;
+        }
+        .pay-action-btn:hover { background: #1b4d3e; } /* A darker green */
+
+        /* Spinner */
+        .loader {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--primary);
+            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite;
+            margin: 0 auto; display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* --- END PAYMENT MODAL STYLES --- */
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <aside class="sidebar">
+        <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80" alt="Dr. Amit Sharma" class="doctor-img">
+        
+        <div>
+            <span class="doctor-badge">Cardiologist</span>
+        </div>
+        <h1>Dr. Amit Sharma</h1>
+        <p>MD, DM (Cardiology) - AIIMS<br>15+ Years Experience</p>
+        <p>Specializes in heart health, blood pressure management, and preventive cardiology.</p>
+        
+        <div class="price-tag">
+            Consultation Fee:
+            <span>₹ 1200</span>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        
+        <div id="calendar-section">
+            <h2>1. Select a Date</h2>
+            
+            <div class="calendar-header">
+                <button class="nav-btn" onclick="changeMonth(-1)">&lt;</button>
+                <span class="month-name" id="currentMonthDisplay">November 2025</span>
+                <button class="nav-btn" onclick="changeMonth(1)">&gt;</button>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid">
+                </div>
+        </div>
+
+        <div id="slots-section" class="slots-area">
+            <h2>2. Select Time Slot <span id="selectedDateDisplay" style="font-weight:400; font-size: 0.9rem; color: var(--primary);"></span></h2>
+            <div class="slots-grid" id="slotsGrid">
+                </div>
+        </div>
+
+        <div id="payment-section" class="payment-area">
+            <h2>3. Confirm & Pay</h2>
+            <div class="payment-details">
+                <div>
+                    <strong>Appointment Time:</strong><br>
+                    <span id="finalTimeDisplay" style="color: var(--text-light);">--:--</span>
+                </div>
+                <div style="text-align: right;">
+                    <strong>Total:</strong><br>
+                    <span style="color: var(--secondary-gold); font-weight: bold; font-size: 1.5rem;">₹ 1200</span>
+                </div>
+            </div>
+            
+            <button class="pay-btn" id="payButton" onclick="openPaymentModal()">Pay ₹1200 & Book Appointment</button>
+
+            <button 
+                id="videoCallButton" 
+                class="pay-btn" 
+                style="display: none; background-color: var(--success); margin-top: 15px;"
+                onclick="window.location.href='videoconsultation.html'"
+            >
+                Join Video Consultation
+            </button>
+        </div>
+
+    </main>
+</div>
+
+<div class="payment-modal-overlay" id="paymentModal">
+    <div class="payment-modal">
+        <div class="payment-header">
+            <h3>Secure Checkout</h3>
+            <button onclick="closePaymentModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="payment-body">
+            <div class="payment-methods">
+                <div class="pay-tab active" onclick="switchTab('card')"><i class="fas fa-credit-card"></i> Card</div>
+                <div class="pay-tab" onclick="switchTab('qr')"><i class="fas fa-qrcode"></i> UPI/QR</div>
+                <div class="pay-tab" onclick="switchTab('cash')"><i class="fas fa-money-bill-wave"></i> Cash</div>
+            </div>
+
+            <div id="tab-card" class="payment-section active">
+                <div class="form-group">
+                    <label>Card Holder Name</label>
+                    <input type="text" placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Card Number</label>
+                    <input type="text" placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex:1">
+                        <label>Expiry</label>
+                        <input type="text" placeholder="MM/YY" maxlength="5">
+                    </div>
+                    <div class="form-group" style="flex:1">
+                        <label>CVV</label>
+                        <input type="password" placeholder="123" maxlength="3">
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-qr" class="payment-section">
+                <div class="qr-container">
+                    <p style="margin-bottom:10px; font-size:0.9rem;">Scan to Pay with any UPI App</p>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ExamplePaymentLink" alt="Payment QR">
+                    <p style="color:var(--primary); font-weight:bold;">Satchitanand Health Corp</p>
+                    <small>ID: satchitanand@upi</small>
+                </div>
+            </div>
+
+            <div id="tab-cash" class="payment-section">
+                <div style="text-align:center; padding:20px;">
+                    <i class="fas fa-hand-holding-usd" style="font-size:3rem; color:var(--success); margin-bottom:15px;"></i>
+                    <p>Pay at the center upon arrival.</p>
+                    <small style="color:gray;">Please bring exact change if possible.</small>
+                </div>
+            </div>
+            
+            <button class="pay-action-btn" id="payBtnModal" onclick="processPaymentInModal()">
+                Pay <span id="payAmountModal">₹ 1200</span>
+            </button>
+            <div class="loader" id="loaderModal"></div>
+        </div>
+    </div>
+</div>
+<script>
+    // --- 1. DATA & VARIABLES ---
+    
+    const currentDate = new Date();
+    let displayedDate = new Date(); // Used for calendar navigation
+    let selectedDate = null;        // The date user clicked
+    let selectedSlot = null;        // The time slot user clicked
+    const consultationFee = 1200;   // Defined fee for payment logic
+
+    // Default Mock Data (Cleared for initial availability)
+    const bookedDatabase = {};
+
+    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    // --- 2. CALENDAR LOGIC (UNCHANGED) ---
+
+    function renderCalendar() {
+        const grid = document.getElementById('calendarGrid');
+        const monthDisplay = document.getElementById('currentMonthDisplay');
+        
+        grid.innerHTML = `
+            <div class="day-name">Sun</div><div class="day-name">Mon</div>
+            <div class="day-name">Tue</div><div class="day-name">Wed</div>
+            <div class="day-name">Thu</div><div class="day-name">Fri</div>
+            <div class="day-name">Sat</div>
+        `;
+
+        const year = displayedDate.getFullYear();
+        const month = displayedDate.getMonth(); // 0-11
+
+        monthDisplay.textContent = `${monthNames[month]} ${year}`;
+
+        // First day of the month (0=Sun, 1=Mon...)
+        const firstDay = new Date(year, month, 1).getDay();
+        // Total days in month
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        // Empty slots for previous month
+        for (let i = 0; i < firstDay; i++) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.classList.add('day-btn', 'empty');
+            grid.appendChild(emptyDiv);
+        }
+
+        // Actual Days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const btn = document.createElement('div');
+            btn.classList.add('day-btn');
+            btn.textContent = day;
+            
+            // Create key for comparison "YYYY-MM-DD"
+            const dateKey = `${year}-${String(month+1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+            // Highlight if previously selected
+            if (selectedDate === dateKey) {
+                btn.classList.add('selected');
+            }
+
+            btn.onclick = () => selectDate(dateKey, btn);
+            grid.appendChild(btn);
+        }
+    }
+
+    function changeMonth(offset) {
+        displayedDate.setMonth(displayedDate.getMonth() + offset);
+        renderCalendar();
+    }
+
+    function selectDate(dateKey, btnElement) {
+        // Visual update
+        document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
+        btnElement.classList.add('selected');
+
+        selectedDate = dateKey;
+        selectedSlot = null; // Reset slot selection
+        
+        // Hide the video button if user changes date/slot selection
+        document.getElementById('videoCallButton').style.display = 'none';
+
+        // UI Updates
+        document.getElementById('slots-section').style.display = 'block';
+        document.getElementById('payment-section').style.display = 'none';
+        document.getElementById('selectedDateDisplay').textContent = `on ${dateKey}`;
+
+        generateTimeSlots(dateKey);
+    }
+
+    // --- 3. TIME SLOT LOGIC (UNCHANGED) ---
+
+    function generateTimeSlots(dateKey) {
+        const slotsGrid = document.getElementById('slotsGrid');
+        slotsGrid.innerHTML = '';
+
+        // Define start hours (e.g., 9 AM to 5 PM)
+        const startHour = 9; 
+        const endHour = 17; 
+
+        // Get booked slots for this date from "database"
+        const bookedForDay = bookedDatabase[dateKey] || [];
+
+        for (let hour = startHour; hour < endHour; hour++) {
+            // Create two 30-min slots per hour
+            createSlotBtn(hour, 0, bookedForDay);   // e.g., 9:00
+            createSlotBtn(hour, 30, bookedForDay);  // e.g., 9:30
+        }
+    }
+
+    function createSlotBtn(hour, minutes, bookedForDay) {
+        // Format Start Time
+        const startPeriod = hour >= 12 ? 'PM' : 'AM';
+        const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
+        const startStr = `${String(displayHour).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${startPeriod}`;
+
+        // Calculate End Time (30 mins later)
+        let endH = hour;
+        let endM = minutes + 30;
+        if (endM >= 60) {
+            endH++;
+            endM = 0;
+        }
+        const endPeriod = endH >= 12 ? 'PM' : 'AM';
+        const displayEndH = endH > 12 ? endH - 12 : (endH === 0 ? 12 : endH);
+        const endMStr = String(endM).padStart(2, '0');
+        const endStr = `${String(displayEndH).padStart(2, '0')}:${endMStr} ${endPeriod}`;
+
+        const timeRange = `${startStr} - ${endStr}`;
+
+        const btn = document.createElement('button');
+        btn.classList.add('time-btn');
+        btn.textContent = timeRange;
+
+        // Check if booked
+        if (bookedForDay.includes(timeRange)) {
+            btn.classList.add('booked');
+            btn.disabled = true;
+            btn.title = "Already Booked";
+        } else {
+            btn.onclick = () => selectSlot(timeRange, btn);
+        }
+
+        document.getElementById('slotsGrid').appendChild(btn);
+    }
+
+    function selectSlot(timeRange, btnElement) {
+        // Visual Update
+        document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+        btnElement.classList.add('selected');
+
+        selectedSlot = timeRange;
+
+        // UI Updates
+        const paySection = document.getElementById('payment-section');
+        const payBtn = document.getElementById('payButton');
+        const videoCallBtn = document.getElementById('videoCallButton');
+
+        paySection.style.display = 'block';
+        
+        // Ensure the payment button is visible and video call button is hidden for a new selection
+        payBtn.style.display = 'block';
+        videoCallBtn.style.display = 'none';
+
+        // Update Summary
+        document.getElementById('finalTimeDisplay').textContent = `${selectedDate} | ${selectedSlot}`;
+        
+        // Auto scroll to payment
+        paySection.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // --- 4. NEW VIDEO CONSULTATION LOGIC (UNCHANGED) ---
+    
+    function joinVideoConsultation() {
+        const date = selectedDate || 'Selected Date';
+        const slot = selectedSlot || 'Selected Time';
+        
+        // In a real application, this would redirect the user to a video
+        // conferencing link (e.g., Zoom, Google Meet, or an internal platform)
+        const videoLink = `https://video.drsharma.com/call?date=${date}&time=${slot.split(' ')[0]}`;
+        
+        alert(`Redirecting to live video consultation for ${date} at ${slot}.\n\n(Simulated Link: ${videoLink})`);
+        // window.open(videoLink, '_blank'); // Uncomment for a real redirect
+    }
+
+
+    // --- 5. NEW PAYMENT MODAL LOGIC (ADDED/MODIFIED) ---
+
+    // Function to initiate the checkout process and open the modal
+    function openPaymentModal() {
+        if (!selectedDate || !selectedSlot) {
+            alert("Please select a date and time slot first.");
+            return;
+        }
+        
+        // Set the amount in the modal
+        document.getElementById('payAmountModal').innerText = `₹ ${consultationFee}`;
+        
+        // Open Payment Modal
+        document.getElementById('paymentModal').classList.add('active');
+    }
+
+    // Function to close the payment modal
+    function closePaymentModal() {
+        document.getElementById('paymentModal').classList.remove('active');
+        
+        // Reset modal pay button state if closed manually
+        const modalPayBtn = document.getElementById('payBtnModal');
+        const loader = document.getElementById('loaderModal');
+        modalPayBtn.style.display = 'block';
+        loader.style.display = 'none';
+        
+        // Reset main pay button text (in case payment simulation was started)
+        const payBtn = document.getElementById('payButton');
+        payBtn.textContent = "Pay ₹1200 & Book Appointment";
+        payBtn.disabled = false;
+        payBtn.style.backgroundColor = "var(--primary-dark)";
+    }
+
+    // Function to switch between payment tabs (Card, QR, Cash)
+    function switchTab(tabName) {
+        // Hide all sections
+        document.querySelectorAll('.payment-section').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.pay-tab').forEach(el => el.classList.remove('active'));
+        
+        // Show selected section
+        document.getElementById('tab-' + tabName).classList.add('active');
+        
+        // Highlight tab
+        const tabs = document.querySelectorAll('.pay-tab');
+        if(tabName === 'card') tabs[0].classList.add('active');
+        if(tabName === 'qr') tabs[1].classList.add('active');
+        if(tabName === 'cash') tabs[2].classList.add('active');
+    }
+    
+    // Function to simulate payment processing AND complete the booking
+    function processPaymentInModal() {
+        const modalPayBtn = document.getElementById('payBtnModal');
+        const loader = document.getElementById('loaderModal');
+
+        if (!selectedDate || !selectedSlot) {
+            alert("Error: Date and Slot selection lost. Please close and reselect.");
+            closePaymentModal();
+            return;
+        }
+        
+        const payBtn = document.getElementById('payButton');
+        const videoCallBtn = document.getElementById('videoCallButton');
+        
+        // Simulate Processing Animation in modal
+        modalPayBtn.style.display = 'none';
+        loader.style.display = 'block';
+        
+        setTimeout(() => {
+            loader.style.display = 'none';
+            modalPayBtn.style.display = 'block';
+            
+            // --- SUCCESS AND BOOKING ACTION ---
+            
+            // 1. Success Message
+            alert(`✅ Success!\n\nAppointment Confirmed for:\n${selectedDate}\n${selectedSlot}\n\nAmount Paid: ₹${consultationFee}`);
+            
+            // 2. "Save" to database (in-memory only)
+            if (!bookedDatabase[selectedDate]) {
+                bookedDatabase[selectedDate] = [];
+            }
+            bookedDatabase[selectedDate].push(selectedSlot);
+
+            // 3. Update UI: HIDE MAIN PAYMENT BUTTON, SHOW VIDEO BUTTON
+            payBtn.style.display = 'none'; // Hide the main pay button
+            videoCallBtn.style.display = 'block'; // Show the video button
+            videoCallBtn.textContent = `🚀 Join Video Consultation for ${selectedSlot.split(' - ')[0]}`;
+            videoCallBtn.disabled = false;
+            
+            // 4. Reset Modal and Slots
+            generateTimeSlots(selectedDate);
+            closePaymentModal(); // Close the new modal
+            
+        }, 2000); // 2 second delay
+    }
+    
+    // Original processPayment is replaced by openPaymentModal and processPaymentInModal
+
+    // Init
+    renderCalendar();
+
+</script>
+
+</body>
+</html>

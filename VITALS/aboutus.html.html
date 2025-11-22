@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Sachidaanand Health</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* --- 1. BRAND VARIABLES (Sachidanand Palette) --- */
+        :root {
+            /* Primary: Deep Healing Teal */
+            --brand-blue: #0f4c5c;       
+            
+            /* Sacred Gold */
+            --brand-cyan: #c5a059;       
+            
+            /* Darkest Teal */
+            --brand-dark: #09303a;       
+            
+            /* Text */
+            --text-main: #09303a;
+            --text-muted: #666666;
+            
+            /* Organic Cream Backgrounds */
+            --color-bg-1: #fdfbf7;
+            --color-bg-2: #e8f4f6;
+            --color-bg-3: #fdfbf7;
+            
+            /* Glass UI */
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 15px 35px rgba(15, 76, 92, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* --- 2. ANIMATED BACKGROUND --- */
+        body {
+            background: linear-gradient(-45deg, var(--color-bg-1), var(--color-bg-2), var(--color-bg-3), #ffffff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- ADDED: NAVIGATION BAR --- */
+        .main-nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.8);
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000;
+            box-shadow: var(--glass-shadow);
+            transition: 0.3s ease;
+        }
+
+        .nav-brand {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brand-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .nav-brand i { color: var(--brand-cyan); }
+
+        .nav-links { display: flex; gap: 5px; }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 10px 20px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: white;
+            background: var(--brand-blue);
+        }
+
+        /* --- 3. HERO HEADER (Fixed Visibility) --- */
+        .hero-header {
+            position: relative;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .video-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            /* Warm filter to match Gold/Teal theme */
+            filter: sepia(20%) contrast(110%) brightness(1.1); 
+        }
+
+        /* Contrast Overlay */
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Gradient changed to Cream/Gold tint */
+            background: linear-gradient(135deg, rgba(253, 251, 247, 0.8), rgba(197, 160, 89, 0.2)); 
+            backdrop-filter: blur(3px);
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 20px;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        .header-content h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            /* Dark Teal Gradient */
+            background: linear-gradient(to right, var(--brand-dark), var(--brand-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(255,255,255,0.8));
+        }
+
+        .header-content p {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--brand-dark);
+            opacity: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            text-shadow: 0 1px 10px rgba(255,255,255,0.8);
+        }
+
+        /* --- 4. MAIN CONTAINER --- */
+        .container {
+            max-width: 1300px;
+            margin: -80px auto 50px; /* Overlap hero */
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- 5. MISSION CARD --- */
+        .mission-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 50px;
+            box-shadow: var(--glass-shadow);
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInUp 1s ease forwards 0.3s;
+            opacity: 0; 
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: var(--brand-dark);
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .section-title span { color: var(--brand-cyan); /* Gold */ }
+
+        .mission-card p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            max-width: 1000px;
+            margin: 0 auto 30px;
+        }
+
+        .founder-note {
+            font-weight: 700;
+            color: var(--brand-blue);
+            background: rgba(15, 76, 92, 0.1);
+            padding: 10px 25px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        /* --- 6. VALUES GRID --- */
+        .values-section { margin-bottom: 80px; }
+        
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .value-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            text-align: center;
+            transition: transform 0.3s;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        .icon-box {
+            width: 70px; height: 70px;
+            background: linear-gradient(135deg, var(--brand-blue), var(--brand-cyan));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 1.8rem;
+            box-shadow: 0 10px 20px rgba(15, 76, 92, 0.2);
+        }
+
+        .value-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--brand-dark);
+            margin-bottom: 15px;
+        }
+
+        .value-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* --- 7. EXCELLENCE SECTION --- */
+        .excellence-container {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            margin-bottom: 60px;
+            overflow: hidden;
+            border: 1px solid rgba(15, 76, 92, 0.1);
+        }
+
+        .text-block { flex: 1; }
+        
+        .text-block ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .text-block li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .text-block li::before {
+            content: '\f058';
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0; top: 2px;
+            color: var(--brand-cyan); /* Gold Check */
+            font-size: 1.2rem;
+        }
+
+        .image-block { flex: 1; position: relative; }
+
+        .image-block img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            /* CHANGED: Initial state is now straight (0deg) */
+            transform: rotate(0deg);
+            transition: 0.3s;
+        }
+        
+        /* CHANGED: Hover state now tilts (2deg) */
+        .excellence-container:hover .image-block img {
+            transform: rotate(2deg) scale(1.02);
+        }
+
+        /* --- FOOTER --- */
+        .main-footer { 
+            background: var(--brand-dark); 
+            color: white;
+            padding: 80px 5% 20px; 
+            position: relative;
+            margin-top: 50px;
+        }
+        
+        .footer-content { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 50px; margin-bottom: 60px; }
+        .footer-left { flex: 1; min-width: 300px; }
+        
+        .brand-logo { 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem; font-weight: 700; color: white; margin-bottom: 20px; 
+        }
+        .brand-logo span { color: var(--brand-cyan); font-style: italic; }
+        
+        .social-icons a {
+            width: 45px; height: 45px; display: inline-flex; justify-content: center; align-items: center;
+            background: rgba(255,255,255,0.1); color: white; border-radius: 50%; margin-right: 10px;
+            text-decoration: none; transition: all 0.3s; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .social-icons a:hover { background: var(--brand-cyan); color: var(--brand-dark); transform: translateY(-3px); }
+        
+        .footer-links-grid { flex: 2; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 40px; }
+        .link-column h4 { margin-bottom: 25px; color: var(--brand-cyan); font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; letter-spacing: 1px; }
+        .link-column ul { list-style: none; }
+        .link-column li { margin-bottom: 12px; }
+        .link-column a { text-decoration: none; color: rgba(255,255,255,0.7); font-size: 0.9rem; transition: 0.3s; }
+        .link-column a:hover { color: var(--brand-cyan); padding-left: 5px; }
+        
+        .footer-bottom { 
+            text-align: center; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); 
+            color: rgba(255,255,255,0.4); font-size: 0.85rem; 
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero-header { height: 50vh; }
+            .header-content h1 { font-size: 2.5rem; }
+            .excellence-container { flex-direction: column; }
+            .mission-card { padding: 30px; }
+            .footer-content { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="main-nav">
+        <a href="#" class="nav-brand">
+            <i class="fas fa-lotus"></i> Sachidanand
+        </a>
+        <div class="nav-links">
+            <a href="main.html">Home</a>
+            <a href="#" class="active">About</a>
+            <a href="packages.html">Packages</a>
+            <a href="docter.html">Doctors</a>
+            <a href="emergency.html">Contact</a>
+        </div>
+    </nav>
+
+    <div class="hero-header">
+        <video class="video-bg" autoplay muted loop playsinline>
+            <source src="https://player.vimeo.com/external/371835760.sd.mp4?s=d7a7c17343583749289132c00007359136664375&profile_id=164&oauth2_token_id=57447761" type="video/mp4">
+        </video>
+        
+        <div class="video-overlay"></div>
+
+        <div class="header-content">
+            <h1>Dedicated to Life</h1>
+            <p>Blending cutting-edge medical science with deep human empathy to illuminate the path to wellness.</p>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <section class="mission-card">
+            <h2 class="section-title">Welcome to <span>Sachidanand Health</span></h2>
+            <p>
+                We are more than just a hospital; we are a center of excellence committed to delivering compassionate, comprehensive, and technologically advanced healthcare. Founded on the principles of <strong>integrity, accessibility, and patient-first care</strong>, our mission is to ensure that every patient journey is guided by expertise and kindness.
+            </p>
+            <div class="founder-note">
+                <i class="fas fa-hospital-alt"></i> Est. 1998 &nbsp;|&nbsp; Chairman: Dr. R.K. Gupta
+            </div>
+        </section>
+
+        <section class="values-section">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2 class="section-title">Our Vision & <span>Values</span></h2>
+            </div>
+            
+            <div class="value-grid">
+                <div class="value-card" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="icon-box"><i class="fas fa-hand-holding-heart"></i></div>
+                    <h3>Purity (Sat)</h3>
+                    <p>Upholding the highest standards of medical ethics, transparency in pricing, and honesty in every procedure we perform.</p>
+                </div>
+
+                <div class="value-card" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="icon-box"><i class="fas fa-brain"></i></div>
+                    <h3>Consciousness (Chit)</h3>
+                    <p>Fostering continuous learning and utilizing the latest technology to ensure diagnostic accuracy and awareness.</p>
+                </div>
+
+                <div class="value-card" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="icon-box"><i class="fas fa-smile"></i></div>
+                    <h3>Bliss (Anand)</h3>
+                    <p>Creating a healing environment that respects patient dignity and provides emotional support to families.</p>
+                </div>
+
+                <div class="value-card" data-tilt data-tilt-max="10" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+                    <div class="icon-box"><i class="fas fa-star"></i></div>
+                    <h3>Excellence</h3>
+                    <p>Recruiting top-tier specialists and investing in advanced robotic infrastructure to achieve superior outcomes.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="excellence-container">
+            <div class="text-block">
+                <h2 class="section-title">A Center of <span>Medical Excellence</span></h2>
+                <p style="margin-top: 15px; line-height: 1.6; color: var(--text-muted);">
+                    We pride ourselves on our multi-specialty approach, housing centers of excellence that offer end-to-end treatment, diagnostics, and preventative care.
+                </p>
+                <ul>
+                    <li><strong>Top-Tier Specialties:</strong> Leaders in Cardiac Sciences, Comprehensive Oncology, and Neurosciences.</li>
+                    <li><strong>Expert Team:</strong> Home to over 100 senior consultants with decades of collective experience.</li>
+                    <li><strong>Advanced Technology:</strong> State-of-the-art robotic surgery systems and 3D imaging for precision.</li>
+                </ul>
+            </div>
+            <div class="image-block">
+                <img src="https://images.unsplash.com/photo-1584515933487-779824d29309?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Robotic Surgery">
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <div class="brand-logo"><i class="fas fa-lotus"></i> Sachidanand <span>Health</span></div>
+                <p style="color:rgba(255,255,255,0.7); margin-bottom:20px; line-height:1.6;">
+                    We believe in treating the person, not just the disease. Experience world-class healthcare with a touch of divinity.
+                </p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-grid">
+                <div class="link-column">
+                    <h4>Patients</h4>
+                    <ul>
+                        <li><a href="#">Find a Doctor</a></li>
+                        <li><a href="#">Book Appointment</a></li>
+                        <li><a href="#">Health Packages</a></li>
+                        <li><a href="#">International Patients</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h4>Specialties</h4>
+                    <ul>
+                        <li><a href="#">Cardiology</a></li>
+                        <li><a href="#">Neurology</a></li>
+                        <li><a href="#">Orthopedics</a></li>
+                        <li><a href="#">Oncology</a></li>
+                    </ul>
+                </div>
+                <div class="link-column">
+                    <h4>Corporate</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Media</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2024 Sachidanand Health. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    <script>
+        VanillaTilt.init(document.querySelectorAll(".value-card"), {
+            max: 10,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.1,
+        });
+    </script>
+
+</body>
+</html>

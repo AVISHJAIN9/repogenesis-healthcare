@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Bed Booking - Satchitanand Health Care</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Three.js & Tween.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* --- Satchitanand Theme --- */
+        :root {
+            --color-primary: #0f4c5c;
+            --color-secondary: #c5a059;
+            --color-dark: #09303a;
+            --color-bg-cream: #fdfbf7;
+        }
+
+        body { margin: 0; overflow: hidden; font-family: 'Outfit', sans-serif; background: var(--color-bg-cream); }
+        
+        h1, h2, h3 { font-family: 'Cormorant Garamond', serif; }
+
+        /* UI Overlay */
+        #ui-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+        }
+
+        .pointer-events-auto { pointer-events: auto; }
+
+        /* Header */
+        .header-badge {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--color-secondary);
+        }
+
+        /* Legend */
+        .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; font-size: 0.9rem; color: #555; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.green { background: #10b981; box-shadow: 0 0 8px #10b981; }
+        .dot.red { background: #ef4444; box-shadow: 0 0 8px #ef4444; }
+        .dot.blue { background: #3b82f6; box-shadow: 0 0 8px #3b82f6; }
+
+        /* Tooltip */
+        #tooltip {
+            position: absolute;
+            background: rgba(15, 76, 92, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            transform: translate(-50%, -150%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+            white-space: nowrap;
+        }
+
+        /* Ward Labels */
+        .ward-label {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: bold;
+            color: var(--color-primary);
+            font-size: 1.1rem;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border: 1px solid var(--color-secondary);
+            transition: opacity 0.3s;
+        }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            background: rgba(9, 48, 58, 0.8);
+            backdrop-filter: blur(8px);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            background: #f8fafc;
+            transition: 0.2s;
+        }
+        .form-input:focus { outline: 2px solid var(--color-secondary); border-color: transparent; }
+
+        /* Luxury Theme Overrides */
+        .theme-luxury .modal-header { background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%); border-bottom: 2px solid #c5a059; }
+        .theme-luxury .modal-title { color: #c5a059; }
+        .theme-luxury .perk-badge { background: rgba(197, 160, 89, 0.1); color: #c5a059; border: 1px solid #c5a059; }
+        .theme-luxury .submit-btn { background: linear-gradient(90deg, #c5a059, #b08d4b); color: black; }
+        
+        /* General Theme Overrides */
+        .theme-general .modal-header { background: linear-gradient(135deg, #0f4c5c 0%, #09303a 100%); }
+        .theme-general .modal-title { color: white; }
+        .theme-general .perk-badge { background: #f0f9ff; color: #0f4c5c; border: 1px solid #e0f2fe; }
+        .theme-general .submit-btn { background: #0f4c5c; color: white; }
+
+        /* Payment Options */
+        .payment-option {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            height: 80px;
+        }
+        .payment-option:hover { background: #f9fafb; }
+        .payment-option.selected { border-color: var(--color-secondary); background: #fffbeb; box-shadow: 0 0 0 2px var(--color-secondary); }
+
+        #canvas-container { width: 100%; height: 100vh; cursor: grab; }
+        #canvas-container:active { cursor: grabbing; }
+
+        /* Back Button */
+        #back-btn {
+            transform: translateY(100px);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #back-btn.visible { transform: translateY(0); }
+
+    </style>
+</head>
+<body>
+
+    <!-- 3D Container -->
+    <div id="canvas-container"></div>
+
+    <!-- Labels -->
+    <div id="tooltip">Bed 101</div>
+    <div id="label-general" class="ward-label">General Ward</div>
+    <div id="label-premium" class="ward-label">Premium Suites</div>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        <!-- Header -->
+        <div class="flex justify-between items-start pointer-events-auto">
+            <div class="header-badge">
+                <h1 class="text-2xl font-bold text-[#0f4c5c]">Satchitanand <span class="text-[#c5a059]">Care</span></h1>
+                <p class="text-sm text-gray-500">Virtual Admission System</p>
+            </div>
+            
+            <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-100 pointer-events-auto">
+                <h3 class="font-bold text-gray-700 mb-2 text-sm uppercase tracking-wide">Ward Status</h3>
+                <div class="legend-item"><div class="dot green"></div> Available</div>
+                <div class="legend-item"><div class="dot red"></div> Occupied</div>
+                <div class="legend-item"><div class="dot blue"></div> Selected</div>
+            </div>
+        </div>
+
+        <!-- Bottom Controls -->
+        <div class="relative w-full flex justify-center pointer-events-none">
+            <!-- Action Hint -->
+            <div id="action-hint" class="absolute bottom-8 transition-opacity duration-300">
+                <span class="bg-[#0f4c5c] text-white px-6 py-3 rounded-full shadow-lg text-sm animate-bounce opacity-90 flex items-center gap-2">
+                    <i class="fas fa-mouse-pointer"></i> Select a Green Bed to View
+                </span>
+            </div>
+
+            <!-- Back Button (Initially Hidden) -->
+            <button id="back-btn" onclick="resetCameraView()" class="pointer-events-auto absolute bottom-8 bg-white text-gray-800 px-6 py-3 rounded-full shadow-xl font-bold border border-gray-200 hover:bg-gray-50 flex items-center gap-2">
+                <i class="fas fa-arrow-left"></i> Back to Overview
+            </button>
+        </div>
+    </div>
+
+    <!-- Dynamic Booking Modal -->
+    <div id="booking-modal" class="fixed inset-0 modal-overlay hidden z-50 flex items-center justify-center p-4">
+        <!-- Modal Content Wrapper (Theme class added here via JS) -->
+        <div id="modal-theme-wrapper" class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden transform transition-all scale-100 pointer-events-auto flex flex-col md:flex-row h-[80vh] md:h-auto">
+            
+            <!-- Left Side: Visuals & Perks -->
+            <div class="md:w-2/5 bg-gray-50 relative overflow-hidden flex flex-col">
+                <div id="modal-bg-image" class="h-40 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600');">
+                    <div class="absolute inset-0 bg-black/30"></div>
+                    <div class="absolute bottom-4 left-4 text-white">
+                        <h3 id="modal-visual-title" class="text-xl font-bold font-serif">General Ward</h3>
+                        <p id="modal-visual-subtitle" class="text-xs opacity-90">Standard Care Unit</p>
+                    </div>
+                </div>
+                
+                <div class="p-6 flex-1 overflow-y-auto">
+                    <h4 class="font-bold text-gray-700 text-sm uppercase mb-4 tracking-wide">Room Features</h4>
+                    <div id="perks-container" class="grid grid-cols-1 gap-3">
+                        <!-- Perks injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Form & Payment -->
+            <div class="md:w-3/5 flex flex-col">
+                <div class="modal-header p-6 text-white flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold modal-title">Confirm Admission</h2>
+                        <p class="text-sm opacity-80">Bed <span id="modal-bed-id" class="font-mono font-bold">#101</span></p>
+                    </div>
+                    <button onclick="closeModal()" class="text-white/80 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
+                </div>
+                
+                <div class="p-6 overflow-y-auto flex-1">
+                    <form onsubmit="confirmBooking(event)">
+                        <!-- Patient Info -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-bold text-gray-400 uppercase mb-3">Patient Details</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="col-span-2">
+                                    <label class="text-xs font-semibold text-gray-600">Full Name</label>
+                                    <input type="text" required class="form-input" placeholder="Patient Name">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-semibold text-gray-600">Age</label>
+                                    <input type="number" required class="form-input" placeholder="Years">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-semibold text-gray-600">Blood Group</label>
+                                    <select class="form-input">
+                                        <option>A+</option><option>O+</option><option>B+</option><option>AB+</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment Integration -->
+                        <div class="mb-6">
+                            <h4 class="text-sm font-bold text-gray-400 uppercase mb-3">Payment Method</h4>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="payment-option" onclick="selectPayment(this)">
+                                    <i class="fas fa-file-medical-alt text-xl text-blue-500"></i>
+                                    <span class="text-xs font-bold">Insurance</span>
+                                </div>
+                                <div class="payment-option" onclick="selectPayment(this)">
+                                    <i class="fas fa-credit-card text-xl text-purple-500"></i>
+                                    <span class="text-xs font-bold">Card</span>
+                                </div>
+                                <div class="payment-option" onclick="selectPayment(this)">
+                                    <i class="fas fa-money-bill-wave text-xl text-green-500"></i>
+                                    <span class="text-xs font-bold">Cash/UPI</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Summary & Action -->
+                        <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                            <div>
+                                <p class="text-xs text-gray-500">Total Amount</p>
+                                <p id="modal-price-display" class="text-xl font-bold text-gray-800">$150<span class="text-sm font-normal text-gray-500">/day</span></p>
+                            </div>
+                            <button type="submit" class="submit-btn px-8 py-3 rounded-lg font-bold shadow-lg transform transition hover:-translate-y-0.5">
+                                Pay & Book
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="toast" class="fixed bottom-10 right-10 bg-white border-l-4 border-green-500 text-gray-800 px-6 py-4 rounded shadow-2xl transform translate-y-32 opacity-0 transition-all duration-500 flex items-center gap-4 z-[100]">
+        <div class="bg-green-100 p-3 rounded-full text-green-600">
+            <i class="fas fa-check-circle text-xl"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-lg">Booking Confirmed</h4>
+            <p class="text-sm text-gray-600">Bed reserved. Payment processed.</p>
+        </div>
+    </div>
+
+    <script>
+        // --- THREE.JS SETUP ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xfdfbf7); 
+        scene.fog = new THREE.Fog(0xfdfbf7, 15, 60);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const INITIAL_CAM_POS = { x: 0, y: 18, z: 18 };
+        camera.position.set(INITIAL_CAM_POS.x, INITIAL_CAM_POS.y, INITIAL_CAM_POS.z);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxPolarAngle = Math.PI / 2.1; 
+        controls.minDistance = 5;
+        controls.maxDistance = 35;
+
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(10, 20, 5);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        scene.add(dirLight);
+
+        // --- SCENE GEOMETRY ---
+        const mainGroup = new THREE.Group();
+        scene.add(mainGroup);
+
+        // Floors
+        const genFloor = new THREE.Mesh(
+            new THREE.PlaneGeometry(16, 20),
+            new THREE.MeshStandardMaterial({ color: 0xe5e7eb, roughness: 0.8 })
+        );
+        genFloor.rotation.x = -Math.PI / 2;
+        genFloor.position.set(-8, 0, 0);
+        genFloor.receiveShadow = true;
+        mainGroup.add(genFloor);
+
+        const luxFloor = new THREE.Mesh(
+            new THREE.PlaneGeometry(16, 20),
+            new THREE.MeshStandardMaterial({ color: 0x8d6e63, roughness: 0.6 })
+        );
+        luxFloor.rotation.x = -Math.PI / 2;
+        luxFloor.position.set(8, 0, 0);
+        luxFloor.receiveShadow = true;
+        mainGroup.add(luxFloor);
+
+        // Divider Wall
+        const wall = new THREE.Mesh(
+            new THREE.BoxGeometry(0.5, 4, 18),
+            new THREE.MeshStandardMaterial({ color: 0xffffff })
+        );
+        wall.position.set(0, 2, 0);
+        wall.castShadow = true;
+        wall.receiveShadow = true;
+        mainGroup.add(wall);
+
+        // Base
+        const base = new THREE.Mesh(
+            new THREE.BoxGeometry(34, 1, 22),
+            new THREE.MeshStandardMaterial({ color: 0x2d3748 })
+        );
+        base.position.set(0, -0.51, 0);
+        mainGroup.add(base);
+
+        // --- BED GENERATION ---
+        const beds = [];
+
+        function createBed(x, z, id, isOccupied, type) {
+            const bedGroup = new THREE.Group();
+            bedGroup.position.set(x, 0, z);
+            const isPremium = type === 'premium';
+
+            // Frame
+            const frame = new THREE.Mesh(
+                new THREE.BoxGeometry(1.2, 0.5, 2.2),
+                new THREE.MeshStandardMaterial({ color: isPremium ? 0x5D4037 : 0x333333 })
+            );
+            frame.position.y = 0.25;
+            frame.castShadow = true;
+            bedGroup.add(frame);
+
+            // Mattress
+            const mattress = new THREE.Mesh(
+                new THREE.BoxGeometry(1.1, 0.25, 2.1),
+                new THREE.MeshStandardMaterial({ color: 0xffffff })
+            );
+            mattress.position.y = 0.625;
+            mattress.castShadow = true;
+            bedGroup.add(mattress);
+
+            // Blanket
+            const blanket = new THREE.Mesh(
+                new THREE.BoxGeometry(1.15, 0.26, 1.2),
+                new THREE.MeshStandardMaterial({ color: isOccupied ? 0xef4444 : 0x10b981 })
+            );
+            blanket.position.set(0, 0.63, 0.45);
+            blanket.receiveShadow = true;
+            bedGroup.add(blanket);
+
+            // Pillow
+            const pillow = new THREE.Mesh(
+                new THREE.BoxGeometry(0.8, 0.15, 0.4),
+                new THREE.MeshStandardMaterial({ color: 0xeeeeee })
+            );
+            pillow.position.set(0, 0.78, -0.7);
+            pillow.castShadow = true;
+            bedGroup.add(pillow);
+
+            // Headboard
+            const headboard = new THREE.Mesh(
+                new THREE.BoxGeometry(1.2, isPremium ? 1.2 : 1.0, 0.1),
+                new THREE.MeshStandardMaterial({ color: isPremium ? 0xc5a059 : 0x94a3b8 })
+            );
+            headboard.position.set(0, isPremium ? 0.6 : 0.5, -1.1);
+            headboard.castShadow = true;
+            bedGroup.add(headboard);
+
+            if (isPremium) {
+                // Side Table
+                const table = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.5, 0.6, 0.5),
+                    new THREE.MeshStandardMaterial({ color: 0x5D4037 })
+                );
+                table.position.set(1.0, 0.3, -0.8);
+                table.castShadow = true;
+                bedGroup.add(table);
+                
+                // Lamp
+                const lamp = new THREE.Mesh(
+                    new THREE.ConeGeometry(0.15, 0.2, 32, 1, true),
+                    new THREE.MeshStandardMaterial({ color: 0xffffff, opacity:0.9, transparent:true })
+                );
+                lamp.position.set(1.0, 0.95, -0.8);
+                bedGroup.add(lamp);
+            }
+
+            bedGroup.userData = { 
+                id: id, 
+                occupied: isOccupied, 
+                type: type,
+                blanketMesh: blanket 
+            };
+
+            scene.add(bedGroup);
+            beds.push(bedGroup);
+        }
+
+        // Layout
+        let bedId = 101;
+        for(let r=0; r<4; r++) {
+            for(let c=0; c<2; c++) {
+                createBed(-4 - (c * 3), (r * 3.5) - 5, bedId++, Math.random() < 0.4, 'general');
+            }
+        }
+        bedId = 201;
+        for(let r=0; r<3; r++) {
+            createBed(6, (r * 5) - 5, bedId++, Math.random() < 0.2, 'premium');
+        }
+
+        // --- INTERACTION & ANIMATION ---
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        let hoveredBed = null;
+        let selectedBedRef = null;
+        let isCameraZoomed = false;
+
+        // DATA FOR TEMPLATES
+        const BED_DATA = {
+            general: {
+                title: "General Ward",
+                subtitle: "Shared Occupancy • Standard Care",
+                img: "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600",
+                theme: "theme-general",
+                price: "$150",
+                perks: [
+                    { icon: "fas fa-user-nurse", text: "Shared Nursing Staff" },
+                    { icon: "fas fa-utensils", text: "Standard Hospital Meals" },
+                    { icon: "fas fa-wifi", text: "Free Wi-Fi Access" },
+                    { icon: "fas fa-bed", text: "Adjustable Electric Bed" }
+                ]
+            },
+            premium: {
+                title: "Royal Suite",
+                subtitle: "Private Room • Luxury Amenities",
+                img: "https://images.unsplash.com/photo-1631815588719-d86dd5290966?q=80&w=600&auto=format&fit=crop",
+                theme: "theme-luxury",
+                price: "$450",
+                perks: [
+                    { icon: "fas fa-user-md", text: "Dedicated 24/7 Nurse" },
+                    { icon: "fas fa-concierge-bell", text: "Gourmet Meal Service" },
+                    { icon: "fas fa-couch", text: "Guest Sleeping Area" },
+                    { icon: "fas fa-tv", text: "Smart TV & Streaming" }
+                ]
+            }
+        };
+
+        function onMouseMove(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            // Tooltip Logic
+            const tooltip = document.getElementById('tooltip');
+            if (tooltip.style.opacity > 0) {
+                tooltip.style.left = event.clientX + 'px';
+                tooltip.style.top = (event.clientY - 20) + 'px';
+            }
+        }
+
+        function onClick(event) {
+            // Ignore clicks if already zoomed or processing
+            if (raycaster.intersectObjects(scene.children, true).length > 0) {
+                if(hoveredBed && !hoveredBed.userData.occupied) {
+                    focusOnBed(hoveredBed);
+                }
+            }
+        }
+
+        function focusOnBed(bed) {
+            if (isCameraZoomed) return;
+            isCameraZoomed = true;
+            selectedBedRef = bed;
+
+            // 1. Calculate Target Position (Offset based on type)
+            const targetOffset = bed.userData.type === 'premium' ? { x: -4, y: 3, z: 0 } : { x: 4, y: 3, z: 0 };
+            const targetPos = {
+                x: bed.position.x + targetOffset.x,
+                y: bed.position.y + targetOffset.y,
+                z: bed.position.z + targetOffset.z
+            };
+
+            // 2. Animate Camera Position
+            new TWEEN.Tween(camera.position)
+                .to(targetPos, 1500)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .start();
+
+            // 3. Animate Controls Target (Look at bed)
+            new TWEEN.Tween(controls.target)
+                .to({ x: bed.position.x, y: bed.position.y, z: bed.position.z }, 1500)
+                .easing(TWEEN.Easing.Cubic.InOut)
+                .onComplete(() => {
+                    openModal(bed);
+                    document.getElementById('back-btn').classList.add('visible');
+                    document.getElementById('action-hint').style.opacity = '0';
+                })
+                .start();
+        }
+
+        function resetCameraView() {
+            closeModal();
+            
+            // Animate back to overview
+            new TWEEN.Tween(camera.position)
+                .to(INITIAL_CAM_POS, 1500)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .start();
+
+            new TWEEN.Tween(controls.target)
+                .to({ x: 0, y: 0, z: 0 }, 1500)
+                .easing(TWEEN.Easing.Cubic.Out)
+                .onComplete(() => {
+                    isCameraZoomed = false;
+                    selectedBedRef = null;
+                    document.getElementById('back-btn').classList.remove('visible');
+                    document.getElementById('action-hint').style.opacity = '1';
+                    
+                    // Revert color if not booked
+                     if(hoveredBed && !hoveredBed.userData.occupied) {
+                        hoveredBed.userData.blanketMesh.material.color.setHex(0x10b981);
+                    }
+                })
+                .start();
+        }
+
+        // --- UI LOGIC ---
+        function openModal(bed) {
+            const data = BED_DATA[bed.userData.type];
+            const wrapper = document.getElementById('modal-theme-wrapper');
+            
+            // Reset Classes
+            wrapper.classList.remove('theme-luxury', 'theme-general');
+            wrapper.classList.add(data.theme);
+
+            // Content Injection
+            document.getElementById('modal-visual-title').innerText = data.title;
+            document.getElementById('modal-visual-subtitle').innerText = data.subtitle;
+            document.getElementById('modal-bg-image').style.backgroundImage = `url('${data.img}')`;
+            document.getElementById('modal-bed-id').innerText = `#${bed.userData.id}`;
+            document.getElementById('modal-price-display').innerHTML = `${data.price}<span class="text-sm font-normal text-gray-500">/day</span>`;
+
+            // Inject Perks
+            const perksContainer = document.getElementById('perks-container');
+            perksContainer.innerHTML = data.perks.map(perk => `
+                <div class="perk-badge flex items-center gap-3 p-3 rounded-lg transition">
+                    <i class="${perk.icon} text-lg"></i>
+                    <span class="text-sm font-semibold">${perk.text}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('booking-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('booking-modal').classList.add('hidden');
+        }
+
+        function selectPayment(el) {
+            document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function confirmBooking(e) {
+            e.preventDefault();
+            if(selectedBedRef) {
+                // Update 3D Model
+                selectedBedRef.userData.occupied = true;
+                selectedBedRef.userData.blanketMesh.material.color.setHex(0xef4444); // Red
+                
+                closeModal();
+                
+                // Success Toast
+                const toast = document.getElementById('toast');
+                toast.classList.remove('translate-y-32', 'opacity-0');
+                setTimeout(() => {
+                    resetCameraView(); // Auto reset after booking
+                    setTimeout(() => toast.classList.add('translate-y-32', 'opacity-0'), 500);
+                }, 2000);
+            }
+        }
+
+        // --- RENDER LOOP ---
+        // Labels
+        const labelGeneral = document.getElementById('label-general');
+        const labelPremium = document.getElementById('label-premium');
+        const vecGeneral = new THREE.Vector3(-8, 2, -8);
+        const vecPremium = new THREE.Vector3(8, 2, -8);
+
+        function updateLabels() {
+            if(isCameraZoomed) {
+                labelGeneral.style.opacity = 0;
+                labelPremium.style.opacity = 0;
+                return;
+            }
+            [ { vec: vecGeneral, el: labelGeneral }, { vec: vecPremium, el: labelPremium } ].forEach(item => {
+                const tempV = item.vec.clone().project(camera);
+                const x = (tempV.x * .5 + .5) * window.innerWidth;
+                const y = (tempV.y * -.5 + .5) * window.innerHeight;
+                if (tempV.z < 1 && x > 0 && x < window.innerWidth && y > 0 && y < window.innerHeight) {
+                    item.el.style.left = `${x}px`; item.el.style.top = `${y}px`; item.el.style.opacity = 1;
+                } else {
+                    item.el.style.opacity = 0;
+                }
+            });
+        }
+
+        function animate(time) {
+            requestAnimationFrame(animate);
+            TWEEN.update(time);
+            controls.update();
+            updateLabels();
+
+            // Raycasting logic
+            if (!isCameraZoomed) {
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects(scene.children, true);
+                let foundBed = false;
+
+                if (intersects.length > 0) {
+                    let object = intersects[0].object;
+                    while(object.parent && object.parent.type !== 'Scene') {
+                        if(object.parent.userData.id) {
+                            const bedGroup = object.parent;
+                            if(hoveredBed !== bedGroup) {
+                                if(hoveredBed && !hoveredBed.userData.occupied) hoveredBed.userData.blanketMesh.material.color.setHex(0x10b981);
+                                hoveredBed = bedGroup;
+                                if(!bedGroup.userData.occupied) {
+                                    bedGroup.userData.blanketMesh.material.color.setHex(0x6ee7b7);
+                                    document.body.style.cursor = 'pointer';
+                                } else {
+                                    document.body.style.cursor = 'not-allowed';
+                                }
+                                const tooltip = document.getElementById('tooltip');
+                                tooltip.innerText = `${bedGroup.userData.type === 'premium' ? 'Premium' : 'General'} Bed ${bedGroup.userData.id}`;
+                                tooltip.style.opacity = 1;
+                            }
+                            foundBed = true;
+                            break;
+                        }
+                        object = object.parent;
+                    }
+                }
+                if(!foundBed && hoveredBed) {
+                    if(!hoveredBed.userData.occupied) hoveredBed.userData.blanketMesh.material.color.setHex(0x10b981);
+                    hoveredBed = null;
+                    document.body.style.cursor = 'default';
+                    document.getElementById('tooltip').style.opacity = 0;
+                }
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('click', onClick);
+
+        animate();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Health Packages & Cart</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* --- SHARED VARIABLES (Sachidanand Palette) --- */
+        :root {
+            /* Deep Healing Teal */
+            --color-accent-blue: #0f4c5c;       
+            
+            /* Sacred Gold */
+            --color-accent-cyan: #c5a059;       
+            
+            /* Darkest Teal */
+            --color-text-main: #09303a;         
+            
+            --color-text-muted: #666666;
+            
+            /* Organic Cream Backgrounds */
+            --color-bg-1: #fdfbf7;
+            --color-bg-2: #e8f4f6;
+            --color-bg-3: #fdfbf7;
+            
+            /* Functional */
+            --color-emergency: #bc4749;
+            --color-green: #2d6a4f;
+            
+            /* Glass UI */
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 8px 32px 0 rgba(15, 76, 92, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(-45deg, var(--color-bg-1), var(--color-bg-2), var(--color-bg-3), #ffffff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--color-text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            width: 90%;
+            max-width: 600px;
+            height: 60px;
+            background: rgba(15, 76, 92, 0.95); /* Dark Teal Nav */
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            position: relative;
+        }
+
+        nav a {
+            flex: 1;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav a:hover, nav a.active { color: #fff; }
+
+        /* --- HERO SECTION --- */
+        .hero-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .hero-text h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            line-height: 1.1;
+            background: -webkit-linear-gradient(45deg, var(--color-text-main), var(--color-accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text h3 {
+            font-weight: 400;
+            color: var(--color-text-muted);
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .hero-image img {
+            width: 350px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        .scroll-down-btn {
+            padding: 12px 25px;
+            background: var(--color-accent-blue);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 15px rgba(15, 76, 92, 0.3);
+        }
+        .scroll-down-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 76, 92, 0.4);
+        }
+
+        /* --- MAIN CONTENT & SEARCH --- */
+        .main-content-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto 100px;
+        }
+
+        .search-container {
+            margin-bottom: 40px;
+            position: relative;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 18px 25px 18px 55px;
+            border-radius: 50px;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            font-size: 1rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            outline: none;
+            color: var(--color-accent-blue);
+        }
+
+        .search-container input:focus {
+            border-color: var(--color-accent-blue);
+            box-shadow: 0 8px 25px rgba(15, 76, 92, 0.15);
+        }
+
+        .search-container::before {
+            content: '\f002';
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-accent-cyan); /* Gold Icon */
+            font-size: 1.1rem;
+            z-index: 10;
+        }
+
+        /* --- FLIP CARD STYLES --- */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 30px;
+        }
+
+        .package-card {
+            background-color: transparent;
+            height: 480px; 
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+
+        .package-card:hover .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.8);
+            overflow: hidden;
+        }
+
+        /* FRONT SIDE */
+        .card-front {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2;
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-bg-1), var(--color-bg-2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-accent-blue);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(15, 76, 92, 0.15);
+        }
+
+        .card-front h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--color-text-main);
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .front-price {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--color-accent-blue);
+            margin-top: 10px;
+        }
+
+        .flip-hint {
+            margin-top: auto;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            opacity: 0.7;
+            background: rgba(15, 76, 92, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        /* BACK SIDE (WITH ADDONS) */
+        .card-back {
+            background: linear-gradient(135deg, #ffffff, var(--color-bg-1));
+            transform: rotateY(180deg);
+            align-items: flex-start; 
+            text-align: left;
+            padding: 25px;
+        }
+
+        .card-back h3 {
+            font-size: 1.1rem;
+            color: var(--color-accent-blue);
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: center;
+            border-bottom: 2px solid rgba(15, 76, 92, 0.1);
+            padding-bottom: 8px;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Scrollable Tests List */
+        .feature-list {
+            list-style: none;
+            width: 100%;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-bottom: 15px;
+            max-height: 100px;
+            overflow-y: auto;
+        }
+
+        .feature-list::-webkit-scrollbar { width: 4px; }
+        .feature-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .feature-list li {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-list li i {
+            color: var(--color-green);
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        /* ADDONS SECTION STYLING */
+        .addons-container {
+            width: 100%;
+            background: rgba(15, 76, 92, 0.05);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 1px dashed rgba(15, 76, 92, 0.3);
+        }
+
+        .addons-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--color-text-main);
+        }
+
+        .addon-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            cursor: pointer;
+        }
+
+        .addon-item input {
+            margin-right: 8px;
+            accent-color: var(--color-accent-blue);
+            cursor: pointer;
+        }
+
+        .card-back .add-btn {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .add-btn {
+            background: var(--color-accent-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(15, 76, 92, 0.3);
+        }
+
+        .add-btn:hover {
+            background: var(--color-accent-cyan);
+            transform: scale(1.02);
+        }
+
+        /* --- CART UI & CROSS ANIMATION --- */
+        .floating-cart-icon {
+            position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px;
+            background: var(--color-accent-blue); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+            box-shadow: 0 10px 25px rgba(15, 76, 92, 0.4); cursor: pointer; z-index: 999;
+            transition: transform 0.3s;
+        }
+        .floating-cart-icon:hover { transform: scale(1.1); background: var(--color-accent-cyan); }
+
+        .cart-count-badge {
+            position: absolute; top: -5px; right: -5px; background: var(--color-emergency);
+            color: white; font-size: 0.75rem; font-weight: bold; width: 24px; height: 24px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            border: 2px solid white;
+        }
+
+        .cart-sidebar {
+            position: fixed; top: 0; right: 0; width: 100%; max-width: 400px; height: 100vh;
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); z-index: 1000;
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            box-shadow: -10px 0 30px rgba(0,0,0,0.1); display: flex; flex-direction: column;
+        }
+        .cart-sidebar.open { transform: translateX(0); }
+
+        .sidebar-header {
+            padding: 25px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            background: var(--color-accent-blue); color: white;
+        }
+
+        .close-btn {
+            background: transparent; border: none; font-size: 1.5rem; color: white;
+            cursor: pointer; transition: all 0.4s ease; width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center; border-radius: 50%;
+        }
+        .close-btn:hover {
+            color: var(--color-emergency); background: rgba(255, 255, 255, 0.2);
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        .cart-items-list { flex-grow: 1; overflow-y: auto; padding: 20px; }
+
+        .cart-item {
+            display: flex; align-items: flex-start; padding: 15px; background: white;
+            border-radius: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            animation: slideIn 0.3s ease; transition: all 0.3s ease;
+        }
+        .cart-item.removing { transform: translateX(-100%); opacity: 0; }
+
+        @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        .cart-item-info { flex-grow: 1; margin-left: 15px; }
+        .cart-item-title { font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 4px; font-family: 'Cormorant Garamond', serif; }
+        .cart-item-addons { font-size: 0.8rem; color: var(--color-text-muted); display: block; margin-bottom: 4px; }
+        .cart-item-price { color: var(--color-accent-blue); font-size: 0.9rem; font-weight: 700; }
+
+        .remove-item-btn {
+            color: var(--color-text-muted); background: transparent; border: none; cursor: pointer;
+            padding: 8px; border-radius: 50%; transition: all 0.3s; margin-top: 5px;
+        }
+        .remove-item-btn:hover { 
+            color: var(--color-emergency); background: rgba(239, 68, 68, 0.1); transform: rotate(90deg);
+        }
+
+        .cart-summary-footer { padding: 30px; border-top: 1px solid rgba(0,0,0,0.05); background: #fff; }
+        .total-cost { font-size: 1.2rem; font-weight: 800; margin: 10px 0 20px 0; display: flex; justify-content: space-between; color: var(--color-accent-blue); }
+        .cart-summary-footer button {
+            width: 100%; padding: 15px; background: var(--color-accent-blue); color: white; border: none;
+            border-radius: 12px; font-weight: 700; cursor: pointer; transition: background 0.3s;
+        }
+        .cart-summary-footer button:hover { background: var(--color-accent-cyan); }
+
+        .cart-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(3px);
+            z-index: 999; opacity: 0; visibility: hidden; transition: all 0.3s;
+        }
+        .cart-overlay.active { opacity: 1; visibility: visible; }
+
+        /* --- FOOTER --- */
+        .main-footer {
+            background: var(--color-text-main);
+            color: white;
+            padding: 80px 20px 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8em;
+            font-weight: 800;
+            color: var(--color-accent-cyan);
+            margin-bottom: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            color: white;
+            margin-right: 10px;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            background: var(--color-accent-cyan);
+            color: var(--color-text-main);
+            transform: translateY(-3px);
+        }
+
+        .footer-col h4 {
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: var(--color-accent-cyan);
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 1px;
+        }
+
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 12px; }
+        .footer-col ul li a {
+            text-decoration: none;
+            color: rgba(255,255,255,0.7);
+            transition: color 0.2s;
+        }
+        .footer-col ul li a:hover { color: var(--color-accent-cyan); padding-left: 5px; }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.4);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .hero-container { flex-direction: column; text-align: center; }
+            .hero-image img { width: 100%; max-width: 300px; }
+            .footer-grid { grid-template-columns: 1fr; text-align: center; }
+        }
+
+        /* --- PAYMENT MODAL & CHECKOUT STYLES (NEW ADDITION) --- */
+        .payment-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px);
+            z-index: 2000; display: none; justify-content: center; align-items: center;
+        }
+        .payment-modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+
+        .payment-modal {
+            background: #fff; width: 90%; max-width: 500px; border-radius: 20px;
+            padding: 0; box-shadow: 0 25px 50px rgba(0,0,0,0.2); overflow: hidden;
+            position: relative;
+        }
+
+        .payment-header {
+            background: var(--color-accent-blue); color: white; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .payment-header h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; }
+        
+        .payment-body { padding: 25px; }
+        
+        .payment-methods { display: flex; gap: 10px; margin-bottom: 20px; }
+        .pay-tab {
+            flex: 1; padding: 10px; text-align: center; border: 1px solid #ddd;
+            border-radius: 10px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem;
+        }
+        .pay-tab.active {
+            background: var(--color-accent-blue); color: white; border-color: var(--color-accent-blue);
+        }
+        
+        .payment-section { display: none; animation: fadeIn 0.3s; }
+        .payment-section.active { display: block; }
+
+        /* Credit Card Form */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 5px; }
+        .form-group input {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+            font-size: 1rem; outline: none; transition: border 0.3s;
+        }
+        .form-group input:focus { border-color: var(--color-accent-blue); }
+        .form-row { display: flex; gap: 15px; }
+
+        /* QR Code Area */
+        .qr-container { text-align: center; padding: 10px; }
+        .qr-container img { width: 180px; height: 180px; margin-bottom: 15px; border: 1px solid #eee; padding: 10px; border-radius: 10px; }
+        
+        .pay-action-btn {
+            width: 100%; padding: 15px; background: var(--color-green); color: white;
+            border: none; border-radius: 10px; font-weight: 700; font-size: 1.1rem;
+            cursor: pointer; margin-top: 20px; transition: all 0.3s;
+        }
+        .pay-action-btn:hover { background: #1b4d3e; }
+
+        /* Spinner */
+        .loader {
+            border: 4px solid #f3f3f3; border-top: 4px solid var(--color-accent-blue);
+            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite;
+            margin: 0 auto; display: none;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="main.html">Home</a> 
+        <a href="packages.html" class="active">Packages</a>
+        <a href="docter.html">Doctors</a>
+        <a href="emergency.html">Contact</a>
+    </nav>
+
+    <div class="hero-container">
+        <div class="hero-text">
+            <h1>Health Checkup <br>& Diagnostics</h1>
+            <h3>Comprehensive screenings for early detection. Advanced labs powered by AI precision.</h3>
+            <button id="scrollToPackages" class="scroll-down-btn" onclick="document.getElementById('mainContent').scrollIntoView()">
+                <i class="fas fa-chevron-down"></i> View Packages
+            </button>
+        </div>
+        <div class="hero-image">
+            <img id="heroImage" 
+                 src="https://images.unsplash.com/photo-1579154204601-01588f351e67?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80" 
+                 alt="Health Checkup Image"
+                 data-tilt data-tilt-max="15" data-tilt-speed="400" data-tilt-glare data-tilt-max-glare="0.2">
+        </div>
+    </div>
+
+    <div class="main-content-container" id="mainContent">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for Full Body, Thyroid, Diabetes...">
+        </div>
+        <div id="products" class="product-grid"></div>
+    </div>
+
+    <div class="floating-cart-icon" onclick="toggleCartSidebar()">
+        <i class="fas fa-shopping-basket"></i>
+        <span id="cartCountBadge" class="cart-count-badge">0</span>
+    </div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+            <button class="close-btn" onclick="toggleCartSidebar()"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="cartItems" class="cart-items-list"></div>
+        <div class="cart-summary-footer">
+            <p style="color: var(--color-text-muted); margin-bottom:5px;">Total Items: <span id="cartCount">0</span></p>
+            <p class="total-cost">Grand Total: <span id="cartTotal">$0.00</span></p>
+            <button onclick="checkout()">Proceed to Checkout</button>
+        </div>
+    </div>
+    
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCartSidebar()"></div>
+
+    <div class="payment-modal-overlay" id="paymentModal">
+        <div class="payment-modal">
+            <div class="payment-header">
+                <h3>Secure Checkout</h3>
+                <button onclick="closePaymentModal()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="payment-body">
+                <div class="payment-methods">
+                    <div class="pay-tab active" onclick="switchTab('card')"><i class="fas fa-credit-card"></i> Card</div>
+                    <div class="pay-tab" onclick="switchTab('qr')"><i class="fas fa-qrcode"></i> UPI/QR</div>
+                    <div class="pay-tab" onclick="switchTab('cash')"><i class="fas fa-money-bill-wave"></i> Cash</div>
+                </div>
+
+                <div id="tab-card" class="payment-section active">
+                    <div class="form-group">
+                        <label>Card Holder Name</label>
+                        <input type="text" placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Card Number</label>
+                        <input type="text" placeholder="0000 0000 0000 0000" maxlength="19">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1">
+                            <label>Expiry</label>
+                            <input type="text" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group" style="flex:1">
+                            <label>CVV</label>
+                            <input type="password" placeholder="123" maxlength="3">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-qr" class="payment-section">
+                    <div class="qr-container">
+                        <p style="margin-bottom:10px; font-size:0.9rem;">Scan to Pay with any UPI App</p>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ExamplePaymentLink" alt="Payment QR">
+                        <p style="color:var(--color-accent-blue); font-weight:bold;">Satchitanand Health Corp</p>
+                        <small>ID: satchitanand@upi</small>
+                    </div>
+                </div>
+
+                <div id="tab-cash" class="payment-section">
+                    <div style="text-align:center; padding:20px;">
+                        <i class="fas fa-hand-holding-usd" style="font-size:3rem; color:var(--color-green); margin-bottom:15px;"></i>
+                        <p>Pay at the center upon arrival.</p>
+                        <small style="color:gray;">Please bring exact change if possible.</small>
+                    </div>
+                </div>
+
+                <button class="pay-action-btn" id="payBtn" onclick="processPayment()">
+                    Pay <span id="payAmount">$0.00</span>
+                </button>
+                <div class="loader" id="loader"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3>Satchitanand Health</h3>
+                <p style="color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 20px;">
+                    Delivering the future of healthcare today. Compassion meets innovation in the heart of Sachidaanand City.
+                </p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#">Find a Doctor</a></li>
+                    <li><a href="#">Book Appointment</a></li>
+                    <li><a href="#">Health Checkups</a></li>
+                    <li><a href="#">Virtual Consult</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Specialties</h4>
+                <ul>
+                    <li><a href="#">Cardiac Sciences</a></li>
+                    <li><a href="#">Neurosciences</a></li>
+                    <li><a href="#">Oncology</a></li>
+                    <li><a href="#">Orthopedics</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <ul>
+                    <li><a href="#">Help Desk</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            &copy; 2025 Satchitanand Health Care Ltd. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+    
+    <script>
+        // --- 1. DATA (With Addons) ---
+        const packages = [
+            { 
+                id: 1, 
+                name: "Basic Wellness Check", 
+                category: "General", 
+                price: 49.00, 
+                icon: "fa-user-md", 
+                desc: "Essential checks for daily health monitoring.",
+                features: ["CBC (Complete Blood Count)", "Fasting Blood Sugar", "Blood Pressure Check", "BMI Calculation"],
+                addons: [
+                    { name: "Vitamin D", price: 15 },
+                    { name: "Iron Profile", price: 12 }
+                ]
+            },
+            { 
+                id: 2, 
+                name: "Full Body Comprehensive", 
+                category: "Full Body", 
+                price: 120.00, 
+                icon: "fa-heartbeat", 
+                desc: "Top to toe analysis for complete peace of mind.",
+                features: ["Kidney Function Test", "Liver Function Test", "Lipid Profile", "ECG & Chest X-Ray", "Vitamin D & B12"],
+                addons: [
+                    { name: "PSA (Prostate)", price: 20 },
+                    { name: "Thyroid Panel", price: 25 }
+                ]
+            },
+            { 
+                id: 3, 
+                name: "Thyroid Profile Advanced", 
+                category: "Thyroid", 
+                price: 35.00, 
+                icon: "fa-dna", 
+                desc: "Detailed analysis of thyroid hormones.",
+                features: ["T3 (Triiodothyronine)", "T4 (Thyroxine)", "TSH (Ultrasensitive)", "Free T3 & T4"],
+                addons: [
+                    { name: "Antibody Test", price: 30 },
+                    { name: "Consultation", price: 40 }
+                ]
+            },
+            { 
+                id: 4, 
+                name: "Diabetes Screening", 
+                category: "Diabetes", 
+                price: 25.00, 
+                icon: "fa-tint", 
+                desc: "Keep your sugar levels in check.",
+                features: ["HbA1c (3 Month Avg)", "Fasting Glucose", "Post-Prandial Glucose", "Urine Ketones"],
+                addons: [
+                    { name: "Insulin Fasting", price: 18 },
+                    { name: "Diet Chart", price: 10 }
+                ]
+            },
+            { 
+                id: 5, 
+                name: "Cardiac Health Plus", 
+                category: "Heart", 
+                price: 85.00, 
+                icon: "fa-heart", 
+                desc: "Deep dive into heart performance.",
+                features: ["Lipid Profile Extended", "ECG / EKG", "hs-CRP", "Cardiologist Consult"],
+                addons: [
+                    { name: "Echo Color Doppler", price: 60 },
+                    { name: "Stress Test", price: 45 }
+                ]
+            },
+            { 
+                id: 6, 
+                name: "Vitamin Deficiency Test", 
+                category: "Vitamins", 
+                price: 55.00, 
+                icon: "fa-capsules", 
+                desc: "Check for vital nutrient deficiencies.",
+                features: ["Vitamin D Total", "Vitamin B12", "Iron Studies", "Calcium & Magnesium"],
+                addons: [
+                    { name: "Folic Acid", price: 15 },
+                    { name: "Zinc Levels", price: 10 }
+                ]
+            },
+            { 
+                id: 7, 
+                name: "Senior Citizen Care", 
+                category: "Senior", 
+                price: 95.00, 
+                icon: "fa-blind", 
+                desc: "Specialized care for age-related concerns.",
+                features: ["Bone Density Markers", "Arthritis Profile", "Electrolytes", "Renal Profile"],
+                addons: [
+                    { name: "Home Collection", price: 10 },
+                    { name: "Hard Copy Reports", price: 5 }
+                ]
+            },
+            { 
+                id: 8, 
+                name: "Women's Wellness", 
+                category: "Women", 
+                price: 75.00, 
+                icon: "fa-venus", 
+                desc: "Hormonal and general health for women.",
+                features: ["Thyroid Profile", "Iron Deficiency", "Hormonal Assay", "Calcium"],
+                addons: [
+                    { name: "Mammogram", price: 50 },
+                    { name: "Pap Smear", price: 25 }
+                ]
+            }
+        ];
+
+        let cart = [];
+
+        // --- 2. RENDER PRODUCTS (WITH ADDONS) ---
+        const productContainer = document.getElementById('products');
+
+        function renderProducts(data) {
+            productContainer.innerHTML = '';
+            data.forEach(pkg => {
+                const featureListHTML = pkg.features.map(f => 
+                    `<li><i class="fas fa-check-circle"></i> ${f}</li>`
+                ).join('');
+
+                // --- GENERATE ADDONS HTML ---
+                let addonsHTML = '';
+                if (pkg.addons && pkg.addons.length > 0) {
+                    addonsHTML = `<div class="addons-container">
+                        <div class="addons-header">Optional Add-ons:</div>`;
+                    
+                    pkg.addons.forEach((addon, idx) => {
+                        addonsHTML += `
+                            <label class="addon-item">
+                                <span>
+                                    <input type="checkbox" class="addon-checkbox" 
+                                           data-price="${addon.price}" 
+                                           data-name="${addon.name}"
+                                           onchange="updateCardPrice(this, ${pkg.id}, ${pkg.price})"> 
+                                    ${addon.name}
+                                </span>
+                                <span>+$${addon.price}</span>
+                            </label>
+                        `;
+                    });
+                    addonsHTML += `</div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'package-card';
+                card.id = `card-${pkg.id}`; // Add ID for easier selection
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="card-icon"><i class="fas ${pkg.icon}"></i></div>
+                            <h3>${pkg.name}</h3>
+                            <p style="color:var(--color-text-muted); font-size:0.9rem; text-align:center;">${pkg.desc}</p>
+                            <div class="front-price">$${pkg.price.toFixed(2)}</div>
+                            <div class="flip-hint"><i class="fas fa-info-circle"></i> View Details</div>
+                        </div>
+                        
+                        <div class="card-back">
+                            <h3><i class="fas fa-clipboard-list"></i> Included Tests</h3>
+                            <ul class="feature-list">
+                                ${featureListHTML}
+                            </ul>
+                            
+                            ${addonsHTML}
+                            
+                            <button class="add-btn" id="btn-${pkg.id}" onclick="addToCart(${pkg.id}, event)">
+                                <i class="fas fa-shopping-cart"></i> Buy Now - $${pkg.price.toFixed(2)}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productContainer.appendChild(card);
+            });
+        }
+
+        renderProducts(packages);
+
+        // --- 3. DYNAMIC PRICE UPDATE FUNCTION ---
+        function updateCardPrice(checkbox, pkgId, basePrice) {
+            // Find the specific card container
+            const card = document.getElementById(`card-${pkgId}`);
+            
+            // Find all checked boxes within this specific card
+            const checkedBoxes = card.querySelectorAll('.addon-checkbox:checked');
+            
+            // Calculate total addon cost
+            let addonTotal = 0;
+            checkedBoxes.forEach(box => {
+                addonTotal += parseFloat(box.getAttribute('data-price'));
+            });
+
+            // Update the button text
+            const newTotal = basePrice + addonTotal;
+            const btn = document.getElementById(`btn-${pkgId}`);
+            btn.innerHTML = `<i class="fas fa-shopping-cart"></i> Buy Now - $${newTotal.toFixed(2)}`;
+        }
+
+        // --- 4. CART LOGIC (UPDATED FOR ADDONS) ---
+        function addToCart(id, event) {
+            if(event) event.stopPropagation();
+            
+            const pkg = packages.find(p => p.id === id);
+            const card = document.getElementById(`card-${id}`);
+            
+            // Identify selected addons
+            const checkedBoxes = card.querySelectorAll('.addon-checkbox:checked');
+            let selectedAddons = [];
+            let totalItemPrice = pkg.price;
+
+            checkedBoxes.forEach(box => {
+                const name = box.getAttribute('data-name');
+                const price = parseFloat(box.getAttribute('data-price'));
+                selectedAddons.push({ name: name, price: price });
+                totalItemPrice += price;
+            });
+
+            // Create cart item object
+            const cartItem = {
+                ...pkg,
+                selectedAddons: selectedAddons,
+                finalPrice: totalItemPrice
+            };
+
+            cart.push(cartItem);
+            updateCartUI();
+            
+            // Visual Feedback
+            const btn = document.getElementById(`btn-${id}`);
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Added';
+            btn.style.background = "var(--color-green)";
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = "";
+            }, 1000);
+        }
+
+        function removeFromCart(index) {
+            const cartItemsList = document.getElementById('cartItems');
+            const itemToRemove = cartItemsList.children[index];
+            itemToRemove.classList.add('removing');
+            setTimeout(() => {
+                cart.splice(index, 1);
+                updateCartUI();
+            }, 300);
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cartItems');
+            const badge = document.getElementById('cartCountBadge');
+            const countSpan = document.getElementById('cartCount');
+            const totalSpan = document.getElementById('cartTotal');
+            
+            list.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                total += item.finalPrice;
+                
+                let addonsStr = item.selectedAddons.map(a => a.name).join(', ');
+                
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <span class="cart-item-title">${item.name}</span>
+                            ${addonsStr ? `<span class="cart-item-addons">+ ${addonsStr}</span>` : ''}
+                            <span class="cart-item-price">$${item.finalPrice.toFixed(2)}</span>
+                        </div>
+                        <button class="remove-item-btn" onclick="removeFromCart(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+            });
+
+            if (cart.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:var(--color-text-muted); margin-top:20px;">Your cart is empty.</p>';
+            }
+
+            badge.innerText = cart.length;
+            countSpan.innerText = cart.length;
+            totalSpan.innerText = '$' + total.toFixed(2);
+        }
+
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = packages.filter(pkg => pkg.name.toLowerCase().includes(term) || pkg.category.toLowerCase().includes(term));
+            renderProducts(filtered);
+        });
+
+        function toggleCartSidebar() {
+            const sidebar = document.getElementById('cartSidebar');
+            const overlay = document.getElementById('cartOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        // --- NEW CHECKOUT & PAYMENT LOGIC ---
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert("Your cart is empty!");
+                return;
+            }
+            
+            // Calculate Total
+            let total = cart.reduce((sum, item) => sum + item.finalPrice, 0);
+            document.getElementById('payAmount').innerText = "$" + total.toFixed(2);
+            
+            // Open Payment Modal
+            document.getElementById('paymentModal').classList.add('active');
+            
+            // Close sidebar if open
+            document.getElementById('cartSidebar').classList.remove('open');
+            document.getElementById('cartOverlay').classList.remove('active');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.remove('active');
+        }
+
+        function switchTab(tabName) {
+            // Hide all sections
+            document.querySelectorAll('.payment-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.pay-tab').forEach(el => el.classList.remove('active'));
+            
+            // Show selected
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            // Highlight tab
+            // Find the tab element that was clicked is hard without passing 'this', 
+            // so we iterate based on index or simple query
+            const tabs = document.querySelectorAll('.pay-tab');
+            if(tabName === 'card') tabs[0].classList.add('active');
+            if(tabName === 'qr') tabs[1].classList.add('active');
+            if(tabName === 'cash') tabs[2].classList.add('active');
+        }
+
+        function processPayment() {
+            const btn = document.getElementById('payBtn');
+            const loader = document.getElementById('loader');
+            
+            // Simulate Processing
+            btn.style.display = 'none';
+            loader.style.display = 'block';
+            
+            setTimeout(() => {
+                loader.style.display = 'none';
+                btn.style.display = 'block';
+                
+                // Success Message
+                alert("Payment Successful! Your booking ID is #" + Math.floor(Math.random() * 90000 + 10000));
+                
+                // Clear Cart and Close
+                cart = [];
+                updateCartUI();
+                closePaymentModal();
+                
+            }, 2500); // 2.5 seconds simulated delay
+        }
+    </script>
+</body>
+</html>

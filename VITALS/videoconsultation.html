@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sachidaanand Health - Secure Video Room</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* --- 1. VARIABLES (Sachidanand Palette Sync) --- */
+        :root {
+            /* Brand Colors */
+            --brand-teal: #0f4c5c;       /* Deep Healing Teal */
+            --brand-gold: #c5a059;       /* Sacred Gold */
+            --brand-dark: #09303a;       /* Darkest Teal */
+            --text-light: #fdfbf7;       /* Organic Cream Light */
+            
+            /* UI Colors */
+            --glass-bg: rgba(15, 76, 92, 0.85); /* Dark Teal Glass */
+            --glass-border: rgba(197, 160, 89, 0.3); /* Gold Border */
+            --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            
+            --status-green: #2d6a4f;
+            --status-red: #bc4749;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--brand-dark);
+        }
+
+        /* --- 2. BACKGROUND VIDEO ANIMATION --- */
+        .video-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            /* Tinting the video Warm/Teal to match brand */
+            filter: brightness(0.5) sepia(40%) hue-rotate(150deg) saturate(1.5); 
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Gradient overlay using Brand Colors */
+            background: linear-gradient(135deg, rgba(15, 76, 92, 0.4), rgba(197, 160, 89, 0.1));
+            backdrop-filter: blur(8px);
+            z-index: 1;
+        }
+
+        /* --- 3. MAIN CONSULTATION CONSOLE --- */
+        .console-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 95%;
+            max-width: 1200px;
+            height: 90vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            box-shadow: var(--glass-shadow);
+            display: flex;
+            flex-direction: column;
+            animation: fadeInUp 1s ease forwards;
+            overflow: hidden;
+        }
+
+        /* Console Header */
+        .console-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(9, 48, 58, 0.4);
+        }
+
+        .brand-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand-area h2 {
+            color: white;
+            font-size: 1.5rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .brand-area span { color: var(--brand-gold); }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(45, 106, 79, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid rgba(45, 106, 79, 0.4);
+            color: #4ade80; /* Brighter green for visibility on dark bg */
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #4ade80;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #4ade80;
+            animation: pulse 2s infinite;
+        }
+
+        /* Console Body (Video Area) */
+        .console-body {
+            flex-grow: 1;
+            position: relative;
+            background: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #meet-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Loader (Visible while Jitsi loads) */
+        .loader-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--brand-dark), #000);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loader-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(197, 160, 89, 0.3);
+            border-top: 4px solid var(--brand-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loader-text {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            font-weight: 500;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Console Footer (Controls) */
+        .console-footer {
+            padding: 15px 30px;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(9, 48, 58, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .encryption-note {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .end-call-btn {
+            position: absolute;
+            right: 30px;
+            background: var(--status-red);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(188, 71, 73, 0.3);
+        }
+
+        .end-call-btn:hover {
+            background: #a4161a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(188, 71, 73, 0.5);
+        }
+
+        /* Animations */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); } 70% { opacity: 1; box-shadow: 0 0 0 10px rgba(74, 222, 128, 0); } 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .console-wrapper { width: 100%; height: 100%; border-radius: 0; border: none; }
+            .console-header h2 { font-size: 1.2rem; }
+            .status-text { display: none; } /* Hide text, keep dot on mobile */
+            .end-call-btn { padding: 8px 15px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <video class="video-bg" autoplay muted loop playsinline>
+        <source src="https://player.vimeo.com/external/452134136.sd.mp4?s=7284986687c73631780845570c04804b00f8f723&profile_id=164&oauth2_token_id=57447761" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    <div class="video-overlay"></div>
+
+    <div class="console-wrapper">
+        
+        <div class="console-header">
+            <div class="brand-area">
+                <h2>Sachidaanand <span>Live</span></h2>
+            </div>
+            
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span class="status-text">Secure Connection</span>
+            </div>
+        </div>
+
+        <div class="console-body">
+            
+            <div class="loader-overlay" id="loader">
+                <div class="spinner"></div>
+                <div class="loader-text">Establishing Secure Channel...</div>
+            </div>
+
+            <div id="meet-container"></div>
+        </div>
+
+        <div class="console-footer">
+            <div class="encryption-note">
+                <i class="fas fa-shield-alt"></i> End-to-end encryption enabled.
+            </div>
+
+            <a href="index.html" class="end-call-btn">
+                <i class="fas fa-phone-slash"></i> End Call
+            </a>
+        </div>
+    </div>
+
+    <script src='https://meet.jit.si/external_api.js'></script>
+    
+    <script>
+        const loader = document.getElementById('loader');
+
+        // --- Configuration ---
+        const DOMAIN = 'meet.jit.si';
+        const ROOM_NAME = 'Sachidaanand_Consultation_' + Math.random().toString(36).substring(7); 
+        const USER_DISPLAY_NAME = 'Patient'; 
+
+        const options = {
+            roomName: ROOM_NAME,
+            width: '100%',
+            height: '100%',
+            parentNode: document.querySelector('#meet-container'), 
+            // *** FORCE ENGLISH LANGUAGE ***
+            lang: 'en', 
+            userInfo: {
+                displayName: USER_DISPLAY_NAME
+            },
+            // Styling Jitsi internal UI to match our theme slightly better
+            configOverwrite: {
+                startWithVideoMuted: false, 
+                startWithAudioMuted: false, 
+                prejoinPageEnabled: false,
+                disableDeepLinking: true,
+                // English display names
+                defaultRemoteDisplayName: 'Doctor',
+                defaultLocalDisplayName: 'Me',
+                // Hide unnecessary buttons for a clean UI
+                toolbarButtons: [
+                    'microphone', 'camera', 'closedcaptions', 'desktop', 'fullscreen',
+                    'fodeviceselection', 'hangup', 'chat', 'raisehand',
+                    'videoquality', 'tileview', 'download', 'help', 'mute-everyone'
+                ]
+            },
+            interfaceConfigOverwrite: {
+                HIDE_INVITE_MORE_HEADER: true,
+                SHOW_JITSI_WATERMARK: false,
+                SHOW_WATERMARK_FOR_GUESTS: false,
+                DEFAULT_BACKGROUND: '#09303a', // Match our brand dark teal
+                TOOLBAR_ALWAYS_VISIBLE: true,
+                // Ensure generic English terminology
+                APP_NAME: 'Sachidaanand Video Health',
+                NATIVE_APP_NAME: 'Sachidaanand Video Health'
+            },
+            onload: function () {
+                // Hide loader when Jitsi is ready
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                }, 2000); 
+            }
+        };
+
+        // --- Initialization ---
+        try {
+            const api = new JitsiMeetExternalAPI(DOMAIN, options);
+
+            api.addEventListener('videoConferenceJoined', (response) => {
+                console.log('Connected to room');
+                // Ensure loader is gone if event fires fast
+                loader.classList.add('hidden'); 
+            });
+            
+            api.addEventListener('readyToClose', () => {
+                window.location.href = 'index.html'; // Redirect on hangup
+            });
+
+        } catch (error) {
+            console.error("Failed to load Jitsi API:", error);
+            loader.innerHTML = "<p style='color:#bc4749; font-weight:bold;'>Connection Failed. Please refresh.</p>";
+        }
+    </script>
+</body>
+</html>

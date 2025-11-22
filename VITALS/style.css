@@ -1,0 +1,255 @@
+/* --- Global Styles & Variables --- */
+:root {
+    --color-primary: #1f3a68;      /* Dark Navy */
+    --color-secondary: #007bff;    /* Blue */
+    --color-success: #4CAF50;      /* Green */
+    --color-error: #dc3545;        /* Red */
+    --color-background: #eef1f6;   /* Light Grey/Blue Background */
+    --color-card-bg: #ffffff;      /* White Card Background */
+    --color-border: #d1d5db;       /* Light Gray Border */
+    --font-family: 'Inter', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: var(--color-background);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* --- Form Container & Typography --- */
+.form-container {
+    max-width: 800px;
+    width: 100%;
+    background: var(--color-card-bg);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: var(--color-primary);
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    border-bottom: 3px solid var(--color-secondary);
+    padding-bottom: 10px;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin-bottom: 30px;
+    font-size: 1.1em;
+}
+
+.info-text {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.85em;
+    color: #9ca3af;
+}
+
+.info-text #userIdDisplay {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+/* --- Form Elements --- */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+fieldset {
+    border: 1px solid var(--color-border);
+    padding: 25px;
+    border-radius: 8px;
+}
+
+legend {
+    color: var(--color-secondary);
+    font-size: 1.25em;
+    font-weight: 600;
+    padding: 0 10px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--color-primary);
+    font-size: 0.95em;
+}
+
+.required {
+    color: var(--color-error);
+    margin-left: 2px;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="tel"],
+select,
+textarea {
+    padding: 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    width: 100%;
+    -webkit-appearance: none; /* For better mobile appearance */
+    appearance: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+select {
+    background-color: #f9fafb;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* --- Submit Button --- */
+#submitBtn {
+    background-color: var(--color-success);
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+#submitBtn:hover {
+    background-color: #43A047;
+    transform: translateY(-2px);
+}
+
+#submitBtn:active {
+    transform: translateY(0);
+}
+
+
+/* --- Custom Modal Styling (Replaces alert) --- */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.4); 
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: var(--color-card-bg);
+    margin: 5% auto; 
+    padding: 30px;
+    border: 1px solid #888;
+    width: 90%; 
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#modalIcon {
+    margin-bottom: 15px;
+}
+
+#modalTitle {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+#modalMessage {
+    color: #6b7280;
+    margin-bottom: 20px;
+}
+
+.modal-close-btn {
+    background-color: var(--color-secondary);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* --- Responsiveness --- */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    #submitBtn {
+        font-size: 1em;
+        padding: 12px;
+    }
+}

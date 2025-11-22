@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Sachidanand</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Outfit:wght@300;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-cream: #fdfbf7;
+            --primary-teal: #0f4c5c;
+            --accent-gold: #c5a059;
+            --glass-surface: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.8);
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-cream);
+            font-family: 'Outfit', sans-serif;
+            color: var(--primary-teal);
+            overflow: hidden;
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+        .orb-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--primary-teal); }
+        .orb-2 { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: var(--accent-gold); }
+
+        /* Glass Card */
+        .dashboard-card {
+            width: 800px;
+            padding: 50px;
+            background: var(--glass-surface);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(15, 76, 92, 0.1);
+            text-align: center;
+            animation: floatUp 0.8s ease-out;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        p { font-size: 1.2rem; margin-bottom: 40px; opacity: 0.8; }
+
+        .btn-logout {
+            padding: 15px 40px;
+            background: var(--primary-teal);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-logout:hover {
+            background: #09303a;
+            box-shadow: 0 5px 15px rgba(15, 76, 92, 0.3);
+            transform: translateY(-2px);
+        }
+
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="dashboard-card">
+        <h1>Welcome, <%= username %></h1>
+        <p>You have successfully accessed the Sachidanand Secure Portal.</p>
+        
+        <form action="/logout" method="POST">
+            <button type="submit" class="btn-logout">Sign Out</button>
+        </form>
+    </div>
+
+</body>
+</html>

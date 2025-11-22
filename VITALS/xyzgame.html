@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Worry Shredder</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:wght@600;700&family=Handlee&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- BRAND PALETTE (Sachidanand) --- */
+        :root {
+            --bg-dark: #09303a;         /* Darkest Teal Background */
+            --text-light: #fdfbf7;      /* Cream Text */
+            --paper-yellow: #fef9c3;    /* Soft Yellow for Note */
+            --text-dark: #0f4c5c;       /* Teal Text for Note */
+            --btn-color: #bc4749;       /* Urgent Red */
+            --btn-hover: #a4161a;       /* Darker Red */
+            --accent-gold: #c5a059;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            /* Subtle background texture */
+            background-image: radial-gradient(rgba(15, 76, 92, 0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        h1 { 
+            margin-bottom: 10px; 
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+        }
+        
+        p { 
+            color: rgba(253, 251, 247, 0.7); 
+            margin-bottom: 40px; 
+            font-size: 1.1rem;
+        }
+
+        /* THE PAPER CONTAINER */
+        .paper-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            perspective: 1000px;
+        }
+
+        /* THE INPUT AREA (Before Shredding) */
+        textarea {
+            width: 100%;
+            height: 100%;
+            background: var(--paper-yellow); 
+            color: var(--text-dark);
+            border: none;
+            padding: 20px;
+            font-family: 'Handlee', cursive, sans-serif; /* Handwriting style */
+            font-size: 1.3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            resize: none;
+            box-sizing: border-box;
+            transition: 0.3s;
+            border-radius: 2px;
+            /* Add a slight rotation for realism */
+            transform: rotate(-1deg);
+        }
+
+        textarea:focus { 
+            outline: none; 
+            transform: scale(1.02) rotate(0deg); 
+            box-shadow: 0 15px 40px rgba(197, 160, 89, 0.2); /* Gold Glow */
+        }
+
+        /* THE SHREDDED STRIPS (Hidden initially) */
+        .strip {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--paper-yellow);
+            color: var(--text-dark);
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: 'Handlee', cursive, sans-serif;
+            font-size: 1.3rem;
+            overflow: hidden;
+            display: none; /* Hidden until shred button pressed */
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+
+        /* THE BUTTON */
+        button {
+            margin-top: 50px;
+            padding: 15px 45px;
+            background: var(--btn-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: 0.3s;
+            box-shadow: 0 5px 20px rgba(188, 71, 73, 0.4);
+        }
+
+        button:hover { 
+            background: var(--btn-hover); 
+            transform: translateY(-3px); 
+            box-shadow: 0 10px 25px rgba(188, 71, 73, 0.5);
+        }
+        
+        button:active { transform: translateY(0); }
+
+        /* ANIMATION KEYFRAMES */
+        @keyframes fallDown {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(500px) rotate(15deg); opacity: 0; }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <h1>The Worry Shredder</h1>
+    <p>Type what is bothering you. Then let it go.</p>
+
+    <div class="paper-container" id="container">
+        <textarea id="worryInput" placeholder="I am worried about..."></textarea>
+    </div>
+
+    <button onclick="shredIt()">SHRED IT</button>
+
+    <script>
+        function shredIt() {
+            const input = document.getElementById('worryInput');
+            const container = document.getElementById('container');
+            const text = input.value;
+
+            if (!text.trim()) {
+                alert("Write something first!");
+                return;
+            }
+
+            // 1. Hide the original input
+            input.style.display = 'none';
+
+            // 2. Create 10 strips
+            const stripsCount = 10;
+            const stripWidth = 100 / stripsCount; // e.g., 10% per strip
+
+            for (let i = 0; i < stripsCount; i++) {
+                const strip = document.createElement('div');
+                strip.classList.add('strip');
+                strip.innerText = text;
+                strip.style.display = 'block';
+
+                // 3. MATH MAGIC: Clip-path
+                // This hides everything in the div EXCEPT a specific vertical slice
+                // polygon(x1 y1, x2 y2, x3 y3, x4 y4)
+                const left = i * stripWidth;
+                const right = (i + 1) * stripWidth;
+                
+                strip.style.clipPath = `polygon(${left}% 0, ${right}% 0, ${right}% 100%, ${left}% 100%)`;
+                
+                // 4. Animation Stagger
+                // We give each strip a random delay so they don't fall perfectly together
+                const randomDelay = Math.random() * 0.5;
+                const randomRotation = (Math.random() * 20) - 10; // -10deg to +10deg
+                
+                strip.style.animation = `fallDown 1.5s ease-in forwards`;
+                strip.style.animationDelay = `${randomDelay}s`;
+
+                container.appendChild(strip);
+            }
+
+            // 5. Reset after animation
+            setTimeout(() => {
+                // Clear container and bring back input
+                container.innerHTML = '';
+                input.value = '';
+                input.style.display = 'block';
+                container.appendChild(input);
+            }, 3000);
+        }
+    </script>
+
+</body>
+</html>

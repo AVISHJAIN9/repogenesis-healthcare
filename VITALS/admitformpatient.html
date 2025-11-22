@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Patient Admission Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* --- 1. BRAND PALETTE (Sachidanand Identity) --- */
+        :root {
+            /* Primary: Deep Healing Teal */
+            --color-primary: #0f4c5c; 
+            --color-primary-dark: #09303a;
+            
+            /* Secondary: Sacred Gold */
+            --color-secondary: #c5a059; 
+            
+            /* Backgrounds */
+            --bg-body: #fdfbf7;       /* Organic Cream */
+            --bg-card: #ffffff;       /* Pure White */
+            --bg-input: #fafafa;      /* Light Gray Input */
+            
+            /* Text */
+            --text-main: #09303a;     /* Dark Teal */
+            --text-muted: #666666;
+            
+            /* Borders */
+            --border-color: rgba(15, 76, 92, 0.2);
+            --border-focus: var(--color-secondary);
+
+            /* Status Colors */
+            --color-success: #2d6a4f;
+            --color-danger: #bc4749;
+            --color-info: #0f4c5c;
+
+            /* Shadows */
+            --shadow-soft: 0 10px 30px rgba(15, 76, 92, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            /* Subtle Texture Overlay */
+            background-image: radial-gradient(rgba(15, 76, 92, 0.1) 1px, transparent 1px);
+            background-size: 25px 25px;
+        }
+
+        /* --- 2. FORM CONTAINER --- */
+        .form-container {
+            background-color: var(--bg-card);
+            width: 100%;
+            max-width: 700px;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-soft);
+            border-top: 5px solid var(--color-primary);
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* --- 3. FIELDSETS & INPUTS --- */
+        fieldset {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            background-color: #fff;
+        }
+
+        legend {
+            font-weight: 700;
+            color: var(--color-secondary); /* Gold Legend */
+            padding: 0 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .required {
+            color: var(--color-danger);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background-color: var(--bg-input);
+            color: var(--text-main);
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.15); /* Gold Glow */
+            background-color: #fff;
+        }
+
+        /* --- 4. BUTTONS --- */
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--color-primary);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--color-secondary);
+        }
+
+        .info-text {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        /* --- 5. MODAL STYLES --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(9, 48, 58, 0.6); /* Dark Teal Overlay */
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            border-top: 5px solid var(--color-primary);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover { color: var(--color-danger); }
+
+        .modal-close-btn {
+            background: #e2e8f0;
+            color: var(--text-main);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        .modal-close-btn:hover { background: #cbd5e1; }
+
+        #modalTitle {
+            margin: 10px 0;
+            color: var(--color-primary);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; gap: 0; }
+            .form-container { padding: 20px; }
+        }
+    </style>
+    
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1><i class="fas fa-hospital-user"></i> Patient Admission Form</h1>
+        <p class="subtitle">Securely record patient details for hospital admission.</p>
+        
+        <form id="admissionForm">
+            <fieldset>
+                <legend>Patient Demographics</legend>
+                <div class="form-group">
+                    <label for="patientName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="patientName" name="patientName" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span class="required">*</span></label>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender <span class="required">*</span></label>
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Contact Phone <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="e.g., 123-456-7890" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Residential Address</label>
+                    <textarea id="address" name="address" rows="2"></textarea>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Admission Information</legend>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="admissionDate">Admission Date <span class="required">*</span></label>
+                        <input type="date" id="admissionDate" name="admissionDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <select id="department" name="department" required>
+                            <option value="" disabled selected>Select Department</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Neurology">Neurology</option>
+                            <option value="Orthopaedics">Orthopaedics</option>
+                            <option value="General Medicine">General Medicine</option>
+                            <option value="Emergency">Emergency</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reason">Reason for Admission <span class="required">*</span></label>
+                    <textarea id="reason" name="reason" rows="3" placeholder="Brief summary of symptoms or condition"></textarea>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Emergency Contact</legend>
+                <div class="form-group">
+                    <label for="ecName">Name <span class="required">*</span></label>
+                    <input type="text" id="ecName" name="ecName" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ecRelation">Relationship</label>
+                        <input type="text" id="ecRelation" name="ecRelation" placeholder="e.g., Spouse, Parent">
+                    </div>
+                    <div class="form-group">
+                        <label for="ecPhone">Phone <span class="required">*</span></label>
+                        <input type="tel" id="ecPhone" name="ecPhone" required>
+                    </div>
+                </div>
+            </fieldset>
+
+            <button type="submit" id="submitBtn">
+                <i class="fas fa-save"></i> Submit Admission
+            </button>
+            <p class="info-text">Admitting User ID: <span id="userIdDisplay">N/A</span></p>
+        </form>
+    </div>
+
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <div id="modalIcon"></div>
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <button class="modal-close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, addDoc, collection, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global variables provided by the Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db;
+        let auth;
+        let userId = '';
+
+        setLogLevel('Debug'); // Enable Firestore logging
+
+        // Function to initialize Firebase and authenticate
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        document.getElementById('userIdDisplay').textContent = userId;
+                    } else {
+                        userId = crypto.randomUUID();
+                        document.getElementById('userIdDisplay').textContent = 'ANON-' + userId.substring(0, 8) + '...';
+                    }
+                    // Once authenticated, attach the submit listener
+                    document.getElementById('admissionForm').addEventListener('submit', handleFormSubmit);
+                });
+
+            } catch (error) {
+                console.error("Firebase Initialization or Auth Error:", error);
+                showModal('Error', 'Failed to connect to the database. Check console for details.', 'error');
+            }
+        }
+
+        // Custom Modal Functions (Replaces alert())
+        window.showModal = (title, message, type) => {
+            const modal = document.getElementById('statusModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalIcon = document.getElementById('modalIcon');
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalIcon.innerHTML = ''; 
+
+            let iconClass = '';
+            let iconColor = '';
+            if (type === 'success') {
+                iconClass = 'fas fa-check-circle';
+                iconColor = '#2d6a4f'; /* Success Green */
+            } else if (type === 'error') {
+                iconClass = 'fas fa-times-circle';
+                iconColor = '#bc4749'; /* Danger Red */
+            } else {
+                iconClass = 'fas fa-info-circle';
+                iconColor = '#0f4c5c'; /* Info Teal */
+            }
+
+            modalIcon.innerHTML = `<i class="${iconClass}" style="color: ${iconColor}; font-size: 40px;"></i>`;
+            modal.style.display = 'block';
+        };
+
+        window.closeModal = () => {
+            document.getElementById('statusModal').style.display = 'none';
+        };
+        
+        // Form Submission Logic
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            if (!userId) {
+                showModal('Pending Auth', 'Authentication not complete. Please wait a moment and try again.', 'info');
+                return;
+            }
+
+            const form = event.target;
+            const formData = new FormData(form);
+            const admissionData = {};
+
+            for (const [key, value] of formData.entries()) {
+                admissionData[key] = value.trim();
+            }
+
+            // Add metadata
+            admissionData.admittingUserId = userId;
+            admissionData.timestamp = new Date().toISOString();
+            admissionData.status = 'Admitted';
+
+            try {
+                const collectionPath = `/artifacts/${appId}/public/data/admissions`;
+                
+                // Save to Firestore
+                const docRef = await addDoc(collection(db, collectionPath), admissionData);
+
+                showModal(
+                    'Success!', 
+                    `Patient ${admissionData.patientName} admitted successfully. Record ID: ${docRef.id}.`, 
+                    'success'
+                );
+
+                form.reset(); // Clear the form on success
+
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                showModal('Submission Error', 'Failed to submit admission. Please check your connection.', 'error');
+            }
+        }
+        
+        // Start the application
+        initializeFirebase();
+    </script>
+</body>
+</html>

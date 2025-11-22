@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sachidaanand Digital Patient Board</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* --- 1. BRAND VARIABLES (Sachidanand Sync) --- */
+        :root {
+            /* Primary Brand Colors */
+            --color-primary: #0f4c5c; 	/* Deep Teal (Action/Links) */
+            --dark-accent-color: #09303a; 	/* Darkest Teal (Header BG/Titles) */
+            --warning-color: #c5a059; 	/* Sacred Gold (Alerts/Highlight) */
+            
+            /* Backgrounds & Text */
+            --main-background-gradient: linear-gradient(135deg, #fdfbf7, #e8f4f6); /* Cream/Light Teal */
+            --text-dark: #09303a; 	/* Dark Teal Text */
+            --text-light: #f8fafc;
+            
+            /* UI & Glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.85); 
+            --glass-border: rgba(197, 160, 89, 0.3); /* Gold Tinted Border */
+            --dark-glass-bg: rgba(9, 48, 58, 0.1); 
+            --success-color: #2d6a4f; 	/* Muted Success Green */
+            --shadow-lg: 0 15px 40px rgba(15, 76, 92, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            /* REMOVED: overflow: hidden; */
+            min-height: 100vh; /* Changed to min-height */
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--main-background-gradient); 
+            color: var(--text-dark);
+            padding: 20px 0; /* Added padding for top/bottom scroll visibility */
+        }
+
+        /* --- 2. MAIN DASHBOARD WRAPPER (SCROLL FIX APPLIED) --- */
+        .main-dashboard-wrapper {
+            width: 95%;
+            max-width: 1400px;
+            margin: 40px auto;
+            border-radius: 25px;
+            /* Changed height to min-height to allow growth */
+            min-height: 90vh; 
+            /* REMOVED: overflow: hidden; */
+            
+            backdrop-filter: blur(10px);
+            background-color: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dashboard-header {
+            background-color: var(--dark-accent-color); 
+            color: var(--text-light);
+            padding: 20px 30px;
+            /* Changed display to block to handle nav bar stacking on top on small screens */
+            display: block; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* NEW: Header Layout */
+        .header-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px; /* Add space between title and nav */
+        }
+
+        .dashboard-header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            margin: 0;
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 0; /* Reset margin */
+        }
+        .dashboard-header span {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* NEW: Navigation Styles */
+        .dashboard-nav {
+            display: flex;
+            justify-content: flex-start; /* Align nav to the left */
+            gap: 15px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-button {
+            background-color: transparent;
+            color: var(--text-light);
+            padding: 8px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            font-size: 0.9em;
+            white-space: nowrap; /* Prevent wrapping in desktop view */
+        }
+
+        .nav-button:hover {
+            background-color: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .nav-button.active {
+            background-color: var(--warning-color); /* Highlight with Gold */
+            border-color: var(--warning-color);
+            color: var(--dark-accent-color);
+            font-weight: 700;
+        }
+
+        /* Layout Grid */
+        .patient-board {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr;
+            gap: 25px;
+            padding: 25px;
+            color: var(--text-dark);
+        }
+        .sidebar {
+            background: var(--glass-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 10px rgba(15, 76, 92, 0.1);
+            backdrop-filter: blur(5px);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* General Card Styling (Glassmorphism) */
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 10px rgba(15, 76, 92, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(15, 76, 92, 0.15);
+        }
+        .card h2 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--dark-accent-color);
+            border-bottom: 2px solid rgba(15, 76, 92, 0.2);
+            padding-bottom: 12px;
+            margin-top: 0;
+            font-size: 1.4em;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .card h2 .icon {
+            font-size: 0.8em;
+            color: var(--color-primary); /* Teal Icon */
+        }
+
+        /* Patient Summary Details */
+        .patient-info p {
+            margin: 10px 0;
+            font-size: 0.98em;
+            line-height: 1.5;
+        }
+        .patient-info strong {
+            color: var(--dark-accent-color);
+            min-width: 130px;
+            font-weight: 600;
+        }
+
+        /* Log Sections */
+        .log-entry {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 12px 0;
+        }
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+        .log-entry strong {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+        .report-link a {
+            color: var(--color-primary); /* Teal link */
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        .report-link a:hover {
+            text-decoration: underline;
+            color: var(--dark-accent-color);
+        }
+
+        /* Vitals/Condition Tracker */
+        .condition-entry {
+            background: var(--dark-glass-bg);
+            border-left: 4px solid var(--warning-color); /* Gold border */
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .condition-entry .time {
+            font-weight: bold;
+            color: var(--dark-accent-color);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        /* Action Buttons/Uploads */
+        .action-button {
+            background-color: var(--success-color); /* Green button */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .action-button:hover {
+            background-color: #2d6a4f; 
+            transform: translateY(-2px);
+        }
+        .upload-section {
+            text-align: center;
+        }
+        .upload-section p {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+        .upload-section input[type="file"] {
+            display: none;
+        }
+        
+        /* Theme Switcher Removal Style Cleanup */
+        .theme-switcher {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .patient-board {
+                grid-template-columns: 1fr;
+                padding: 15px;
+                gap: 15px;
+            }
+            .dashboard-header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px 20px;
+            }
+            .main-dashboard-wrapper {
+                width: 95%;
+                margin: 20px auto;
+            }
+
+            /* NEW: Responsive Header/Nav */
+            .header-top-row {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            .dashboard-nav {
+                flex-direction: column; /* Stack buttons vertically on small screens */
+                align-items: stretch;
+                gap: 8px;
+            }
+            .nav-button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-dashboard-wrapper">
+        <div class="dashboard-header">
+            <div class="header-top-row">
+                <h1>Sachidaanand Digital Patient Board</h1>
+                <span id="admit-info">Admitted since: Loading... | Room: N/A</span>
+            </div>
+
+            <div class="dashboard-nav">
+                <a href="#" class="nav-button active"><i class="fas fa-chart-line"></i> Patient Dashboard</a>
+                <a href="admitformpatient.html" class="nav-button"><i class="fas fa-file-alt"></i> Admit Form</a>
+                <a href="surgerytracker.html" class="nav-button"><i class="fas fa-video"></i> Live Surgery Tracker</a>
+                <a href="#" class="nav-button"><i class="fas fa-clipboard-check"></i> Discharge Summary</a>
+            </div>
+        </div>
+
+        <div class="patient-board">
+            <div class="sidebar">
+                <div class="card patient-info">
+                    <h2>Patient Summary <span class="icon">📄</span></h2>
+                    <p>Loading patient data...</p>
+                </div>
+                
+                <div class="card upload-section">
+                    <h2>Upload New Documents <span class="icon">⬆️</span></h2>
+                    <p>Securely upload new test results, scans, or consent forms.</p>
+                    <label for="report-upload" class="action-button">
+                        Select File to Upload
+                    </label>
+                    <input type="file" id="report-upload" name="report-upload"> 
+                </div>
+
+                </div>
+
+            <div class="main-content">
+
+                <div class="card">
+                    <h2>Medication & Treatment <span class="icon">💊</span></h2>
+                    <p>Loading...</p>
+                </div>
+
+                <div class="card">
+                    <h2>6-Hour Condition Tracker <span class="icon">📊</span></h2>
+                    <p>Loading...</p>
+                </div>
+                
+                <div class="card">
+                    <h2>Report History <span class="icon">📁</span></h2>
+                    <p>Loading...</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- SIMULATED DATA STORE (Replace with API calls to your Backend) ---
+        const patientDatabase = {
+            "user123": {
+                id: 'U-00123', name: 'Mr. David Chen', age: '60', gender: 'Male',
+                diagnosis: 'Chronic Kidney Disease (Stage 4)', consultant: 'Dr. P. Varma (Nephrology)',
+                allergies: 'None', status: 'Dialysis Scheduled', admitInfo: '2025-11-15 | Room: HDU 201',
+                medicationLog: [
+                    { time: '2025-11-20 08:00', type: 'Medicine Change', order: 'Increase dosage of Phosphate Binder (Sevelamer) to 3x/day.' },
+                    { time: '2025-11-19 14:00', type: 'Doctor\'s Order', order: 'Monitor fluid input/output strictly.' }
+                ],
+                conditionLog: [
+                    { time: '2025-11-20 16:00 (Latest Update)', notes: 'Vitals stable. BP 140/90. Patient feeling fatigued. Dietitian visit scheduled.' },
+                    { time: '2025-11-20 10:00', notes: 'Pre-dialysis vitals recorded. No signs of infection.' }
+                ],
+                reportHistory: [
+                    { time: '2025-11-19 18:00', name: 'Creatinine and BUN Levels', link: '#' },
+                    { time: '2025-11-15 10:00', name: 'Renal Ultrasound Scan', link: '#' }
+                ]
+            },
+            "user456": {
+                id: 'U-00456', name: 'Ms. Anjali Verma', age: '45', gender: 'Female',
+                diagnosis: 'Acute Myocardial Infarction', consultant: 'Dr. R. Sharma (Cardiology)',
+                allergies: 'Penicillin', status: 'Stable, Post-Procedure', admitInfo: '2025-11-18 | Room: ICU 302',
+                medicationLog: [
+                    { time: '2025-11-20 14:00', type: 'Doctor\'s Order', order: 'Start IV Drip of Heparin.' },
+                    { time: '2025-11-19 22:30', type: 'Medicine Change', order: 'Discontinue Atenolol; switch to Metoprolol 50mg BID.' }
+                ],
+                conditionLog: [
+                    { time: '2025-11-20 12:00 (Latest Update)', notes: 'Vitals: HR 78, BP 125/80, Temp 98.6°F. Patient awake, alert. Oxygen stable at 98%.' },
+                    { time: '2025-11-20 06:00', notes: 'Vitals: HR 82, BP 130/85. Slept well. No reported chest pain overnight. Nurse T. Khan.' }
+                ],
+                reportHistory: [
+                    { time: '2025-11-20 10:00', name: 'Cardiac Enzyme Test (Post-Procedure)', link: '#' },
+                    { time: '2025-11-18 20:30', name: 'Coronary Angiography Report', link: '#' }
+                ]
+            }
+        };
+        
+        // --- CORE RENDERING FUNCTION ---
+
+        /**
+         * Fetches and injects patient-specific data into the dashboard.
+         * @param {string} patientID - The ID of the user (from a session/token).
+         */
+        function fetchAndRenderPatientData(patientID) {
+            const data = patientDatabase[patientID];
+
+            if (!data) {
+                console.error(`Patient data not found for ID: ${patientID}`);
+                document.querySelector('.patient-board').innerHTML = '<h2 style="text-align:center;">User Not Found or Not Admitted.</h2>';
+                return;
+            }
+            
+            // Update Header Info
+            document.getElementById('admit-info').textContent = `Admitted since: ${data.admitInfo.split('|')[0].trim()} | Room: ${data.admitInfo.split('|')[1].trim()}`;
+
+            // 1. Render Summary
+            const summaryCard = document.querySelector('.patient-info');
+            summaryCard.innerHTML = `
+                <h2>Patient Summary <span class="icon">📄</span></h2>
+                <p><strong>Patient ID:</strong> ${data.id}</p>
+                <p><strong>Name:</strong> ${data.name}</p>
+                <p><strong>Age/Gender:</strong> ${data.age} / ${data.gender}</p>
+                <p><strong>Primary Diagnosis:</strong> ${data.diagnosis}</p>
+                <p><strong>Consultant:</strong> ${data.consultant}</p>
+                <p><strong>Allergies:</strong> ${data.allergies}</p>
+                <p><strong>Current Status:</strong> ${data.status}</p>
+            `;
+            
+            // 2. Render Medication Log
+            const medLogCard = document.querySelector('.main-content .card:nth-child(1)');
+            let medHtml = '<h2>Medication & Treatment <span class="icon">💊</span></h2>';
+            data.medicationLog.forEach(log => {
+                medHtml += `
+                    <div class="log-entry">
+                        <span style="float: right; color: #777; font-size:0.85em;">${log.time}</span>
+                        <strong>${log.type}:</strong> ${log.order}
+                    </div>
+                `;
+            });
+            medLogCard.innerHTML = medHtml;
+
+            // 3. Render Condition Tracker
+            const conditionCard = document.querySelector('.main-content .card:nth-child(2)');
+            let conditionHtml = '<h2>6-Hour Condition Tracker <span class="icon">📊</span></h2>';
+            data.conditionLog.forEach(log => {
+                conditionHtml += `
+                    <div class="condition-entry">
+                        <span class="time">${log.time}</span>
+                        <div class="notes">${log.notes}</div>
+                    </div>
+                `;
+            });
+            conditionCard.innerHTML = conditionHtml;
+
+            // 4. Render Report History
+            const reportCard = document.querySelector('.main-content .card:nth-child(3)');
+            let reportHtml = '<h2>Report History <span class="icon">📁</span></h2>';
+            data.reportHistory.forEach(report => {
+                reportHtml += `
+                    <div class="log-entry report-link">
+                        <span style="float: right; color: #777; font-size:0.85em;">${report.time}</span>
+                        <strong>Report:</strong> ${report.name}
+                        <a href="${report.link}">View/Download PDF</a>
+                    </div>
+                `;
+            });
+            reportCard.innerHTML = reportHtml;
+        }
+
+
+        // --- DYNAMIC COLOR THEME FUNCTION (Placeholder for compatibility) ---
+
+        /**
+         * Changes the entire theme based on predefined colors.
+         * @param {string} themeName - 'blue', 'purple', 'green', etc.
+         */
+        function changeTheme(themeName) {
+            // Function logic removed as the theme is fixed to Sachidanand
+        }
+
+        // --- INITIALIZATION (Simulated) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulated User Login (Replace with actual authentication retrieval)
+            const loggedInUserID = 'user456'; 
+            fetchAndRenderPatientData(loggedInUserID);
+            
+            // Upload Button Handler (Simulated)
+            document.getElementById('report-upload').addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    alert(`File selected: ${this.files[0].name}. Uploading... (Requires backend)`);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

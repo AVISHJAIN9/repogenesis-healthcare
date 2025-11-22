@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specialties - Satchitanand Health Care</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* --- SHARED VARIABLES (Sachidanand Theme Sync) --- */
+        :root {
+            /* Primary: Deep Healing Teal (Was Blue) */
+            --color-accent-blue: #0f4c5c;
+            
+            /* Secondary: Sacred Gold (Was Cyan) */
+            --color-accent-cyan: #c5a059;
+            
+            /* Background Gradients (Cream/Teal Mix) */
+            --color-bg-1: #fdfbf7;
+            --color-bg-2: #e8f4f6;
+            --color-bg-3: #fdfbf7;
+            
+            /* Text */
+            --color-text-main: #09303a; 
+            --color-text-muted: #666666;
+            
+            --color-emergency: #bc4749;
+            
+            /* Glass UI */
+            --glass-bg: rgba(255, 255, 255, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --glass-shadow: 0 8px 32px 0 rgba(15, 76, 92, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(-45deg, var(--color-bg-1), var(--color-bg-2), var(--color-bg-3), #ffffff);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--color-text-main);
+            min-height: 100vh;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- NAVIGATION (Consistent) --- */
+        nav {
+            width: 90%;
+            max-width: 600px;
+            height: 60px;
+            background: rgba(15, 76, 92, 0.95); /* Dark Teal Nav */
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        nav a {
+            flex: 1;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav a:hover, nav a.active { color: #fff; }
+
+        /* --- HERO SECTION --- */
+        .hero-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .hero-text h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: -webkit-linear-gradient(45deg, var(--color-text-main), var(--color-accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text h4 {
+            font-weight: 400;
+            color: var(--color-text-muted);
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        /* Search Bar Styling */
+        .search-box {
+            position: relative;
+            max-width: 400px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border-radius: 50px;
+            border: 2px solid transparent;
+            background: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            outline: none;
+            color: var(--color-accent-blue);
+        }
+        
+        .search-box input:focus {
+            border-color: var(--color-accent-blue);
+            box-shadow: 0 5px 20px rgba(15, 76, 92, 0.15);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-accent-cyan); /* Gold Icon */
+        }
+
+        .hero-image img {
+            width: 350px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+        }
+
+        /* --- FILTER BAR (Sticky) --- */
+        .sticky-wrapper {
+            position: sticky;
+            top: 20px;
+            z-index: 50;
+            padding: 0 5%;
+            margin-bottom: 40px;
+        }
+
+        #alphabet-filter {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 15px 20px;
+            border-radius: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .filter-btn {
+            border: none;
+            background: transparent;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            background: var(--color-bg-2);
+            color: var(--color-accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: var(--color-accent-blue);
+            color: white;
+            box-shadow: 0 4px 10px rgba(15, 76, 92, 0.3);
+        }
+
+        /* --- GRID LAYOUT --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto 60px;
+        }
+
+        /* Card Styling */
+        .specialty-group {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .specialty-group.hidden {
+            display: none;
+        }
+
+        .specialty-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(15, 76, 92, 0.1);
+            background: rgba(255,255,255,0.9);
+        }
+
+        .group-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(197, 160, 89, 0.2); /* Gold Border */
+        }
+
+        .letter-badge {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--color-accent-blue), var(--color-accent-cyan));
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: 800;
+            margin-right: 15px;
+            box-shadow: 0 5px 15px rgba(15, 76, 92, 0.3);
+        }
+
+        .group-header h3 {
+            color: var(--color-text-main);
+            font-size: 1.2em;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .specialty-list {
+            list-style: none;
+        }
+
+        .specialty-list li {
+            padding: 8px 0;
+            color: var(--color-text-muted);
+            font-size: 0.95em;
+            border-bottom: 1px dashed rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .specialty-list li:last-child { border-bottom: none; }
+
+        .specialty-list li::before {
+            content: '\f105'; /* FontAwesome chevron */
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            margin-right: 10px;
+            color: var(--color-accent-cyan); /* Gold Chevron */
+            transition: margin-right 0.2s;
+        }
+
+        .specialty-list li:hover {
+            color: var(--color-accent-blue);
+            padding-left: 5px;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .hero-container { flex-direction: column; padding: 30px; text-align: center; }
+            .hero-image img { width: 100%; max-width: 300px; transform: rotate(0); }
+            .search-box { margin: 0 auto; }
+            
+            #alphabet-filter {
+                overflow-x: auto;
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                padding-bottom: 15px; /* Space for scrollbar */
+            }
+            /* Hide scrollbar for cleaner look */
+            #alphabet-filter::-webkit-scrollbar { height: 0; width: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="main.html">Home</a> <a href="#" class="active">Specialties</a>
+        <a href="docter.html">Doctors</a>
+        <a href="emergency.html">Contact</a>
+    </nav>
+
+    <div class="hero-container">
+        <div class="hero-text">
+            <h1>Explore Medical <br>Specialties</h1>
+            <h4>Comprehensive care powered by advanced AI diagnostics. Browse our specialties or search to find exactly what you need.</h4>
+            
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search e.g. 'Heart', 'Kidney'...">
+            </div>
+        </div>
+        
+        <div class="hero-image">
+            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=700&q=80" 
+                 alt="AI Medical Research"
+                 data-tilt 
+                 data-tilt-max="15" 
+                 data-tilt-speed="400" 
+                 data-tilt-glare 
+                 data-tilt-max-glare="0.3">
+        </div>
+    </div>
+
+    <div class="sticky-wrapper">
+        <div id="alphabet-filter">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="A">A</button>
+            <button class="filter-btn" data-filter="B">B</button>
+            <button class="filter-btn" data-filter="C">C</button>
+            <button class="filter-btn" data-filter="D">D</button>
+            <button class="filter-btn" data-filter="E">E</button>
+            <button class="filter-btn" data-filter="F">F</button>
+            <button class="filter-btn" data-filter="G">G</button>
+            <button class="filter-btn" data-filter="H">H</button>
+            <button class="filter-btn" data-filter="I">I</button>
+            <button class="filter-btn" data-filter="K">K</button>
+            <button class="filter-btn" data-filter="L">L</button>
+            <button class="filter-btn" data-filter="M">M</button>
+            <button class="filter-btn" data-filter="N">N</button>
+            <button class="filter-btn" data-filter="O">O</button>
+            <button class="filter-btn" data-filter="P">P</button>
+            <button class="filter-btn" data-filter="R">R</button>
+            <button class="filter-btn" data-filter="S">S</button>
+            <button class="filter-btn" data-filter="T">T</button>
+            <button class="filter-btn" data-filter="U">U</button>
+            <button class="filter-btn" data-filter="V">V</button>
+        </div>
+    </div>
+
+    <div class="grid-container" id="specialtyList">
+        
+        <div class="specialty-group" data-letter="A">
+            <div class="group-header">
+                <div class="letter-badge">A</div>
+                <h3>Allergies & Acoustics</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Acoustic neuromas</li>
+                <li>Asthma</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="B">
+            <div class="group-header">
+                <div class="letter-badge">B</div>
+                <h3>Bones & Brain</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Bladder diseases and cancers</li>
+                <li>Birth defects (urological)</li>
+                <li>Bone diseases</li>
+                <li>Brain tumours</li>
+                <li>Bronchitis (acute and chronic)</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="C">
+            <div class="group-header">
+                <div class="letter-badge">C</div>
+                <h3>Cardiac & Cancer</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Cardiac conditions</li>
+                <li>Cancer (Adult & Paediatric)</li>
+                <li>Colon problems</li>
+                <li>Complex trauma</li>
+                <li>Congenital conditions</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="D">
+            <div class="group-header">
+                <div class="letter-badge">D</div>
+                <h3>Digestive & Diabetes</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Dementia</li>
+                <li>Degenerative disc disease</li>
+                <li>Digestive tract diseases</li>
+                <li>Diabetes (Type 1 and Type 2)</li>
+                <li>Disorders of bone & joint</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="E">
+            <div class="group-header">
+                <div class="letter-badge">E</div>
+                <h3>Endocrinology</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Epilepsy</li>
+                <li>Erectile dysfunction</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="F">
+            <div class="group-header">
+                <div class="letter-badge">F</div>
+                <h3>Fluids & Functional</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Failed back surgery syndrome</li>
+                <li>Fluctuating blood pressure</li>
+                <li>Fungal infections</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="G">
+            <div class="group-header">
+                <div class="letter-badge">G</div>
+                <h3>Gastroenterology</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Gastro-intestinal diseases</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="H">
+            <div class="group-header">
+                <div class="letter-badge">H</div>
+                <h3>Head & Heart</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Headaches</li>
+                <li>Herniated discs</li>
+                <li>High cholesterol</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="I">
+            <div class="group-header">
+                <div class="letter-badge">I</div>
+                <h3>Infections & Internal</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Infections (urological)</li>
+                <li>Infertility</li>
+                <li>Inner ear disorders</li>
+                <li>Intestinal problems</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="K">
+            <div class="group-header">
+                <div class="letter-badge">K</div>
+                <h3>Kidney Care</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Kidney stones</li>
+                <li>Kidney failure</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="M">
+            <div class="group-header">
+                <div class="letter-badge">M</div>
+                <h3>Movement & Mind</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Meniere's disease</li>
+                <li>Migraines</li>
+                <li>Movement disorders</li>
+                <li>Multiple sclerosis</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="N">
+            <div class="group-header">
+                <div class="letter-badge">N</div>
+                <h3>Neurology</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Neuro-cancers</li>
+                <li>Neurodegenerative disorders</li>
+                <li>Neuromuscular disorders</li>
+                <li>Neurovascular diseases</li>
+                <li>Numbness</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="P">
+            <div class="group-header">
+                <div class="letter-badge">P</div>
+                <h3>Pancreas & Prostate</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Pancreas diseases</li>
+                <li>Parkinson's disease</li>
+                <li>Prostate diseases</li>
+                <li>Prostate enlargement</li>
+            </ul>
+        </div>
+
+        <div class="specialty-group" data-letter="S">
+            <div class="group-header">
+                <div class="letter-badge">S</div>
+                <h3>Spine & Skin</h3>
+            </div>
+            <ul class="specialty-list">
+                <li>Scoliosis</li>
+                <li>Seizures</li>
+                <li>Sinus infections</li>
+                <li>Skin conditions</li>
+                <li>Spinal cord injuries</li>
+                <li>Stroke</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const groups = document.querySelectorAll('.specialty-group');
+            const searchInput = document.getElementById('searchInput');
+
+            // --- ALPHABET FILTER LOGIC ---
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active class from all
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Add to clicked
+                    btn.classList.add('active');
+
+                    const letter = btn.getAttribute('data-filter');
+
+                    groups.forEach(group => {
+                        // Reset search input when clicking buttons
+                        searchInput.value = ''; 
+                        
+                        if (letter === 'all' || group.getAttribute('data-letter') === letter) {
+                            group.classList.remove('hidden');
+                            // Small animation reset
+                            group.style.animation = 'none';
+                            group.offsetHeight; /* trigger reflow */
+                            group.style.animation = 'fadeIn 0.5s forwards';
+                        } else {
+                            group.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            // --- SEARCH BAR LOGIC ---
+            searchInput.addEventListener('keyup', (e) => {
+                const term = e.target.value.toLowerCase();
+                
+                // Reset buttons visual state
+                filterBtns.forEach(b => b.classList.remove('active'));
+                
+                groups.forEach(group => {
+                    const listItems = group.querySelectorAll('li');
+                    let hasMatch = false;
+
+                    listItems.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        if(text.includes(term)) {
+                            item.style.display = 'flex';
+                            item.style.color = 'var(--color-accent-blue)'; // Highlight match
+                            item.style.fontWeight = '700';
+                            hasMatch = true;
+                        } else {
+                            // If search is empty, reset styles, else hide
+                            if(term === '') {
+                                item.style.display = 'flex';
+                                item.style.color = '';
+                                item.style.fontWeight = '';
+                            } else {
+                                item.style.display = 'none';
+                            }
+                        }
+                    });
+
+                    // If the group has at least one matching item, show the card
+                    if (hasMatch || term === '') {
+                        group.classList.remove('hidden');
+                    } else {
+                        group.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
